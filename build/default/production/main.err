@@ -1,5 +1,16 @@
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 58 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 59 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 118 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 120 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 71 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 91 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 95 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 105 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 109 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 120 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 124 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 135 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 139 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 149 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 153 : Using default destination of 1 (file).
+Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 169 : Using default destination of 1 (file).
+Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 191 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 193 : Register in operand not in bank 0.  Ensure that bank bits are correct.

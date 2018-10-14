@@ -1,4 +1,4 @@
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  1
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -46,210 +46,308 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000022            00029 BIT      EQU 0x22
   00000023            00030 TECLA    EQU 0x23
   00000024            00031 LAST_TECLA EQU 0x24
-                      00032         ORG H'0'
-0000   2???           00033         GOTO INICIO
-                      00034 
-0001                  00035 CONVERT_HEX
-0001   0782           00036         ADDWF PCL,F
-0002   3401 3402 3403 00037         DT .1,.2,.3,.4,.5
+  00000025            00032 RESPUESTA EQU 0x25
+  00000026            00033 CORRECTO EQU 0x26
+  00000027            00034 CONT_WIN EQU 0x27
+                      00035         ORG H'0'
+0000   2???           00036         GOTO INICIO
+                      00037 
+0001                  00038 CONVERT_HEX
+0001   0782           00039         ADDWF PCL,F
+0002   3401 3402 3403 00040         DT .1,  .2, .3, .4, .5
        3404 3405 
-0007   3406 3407 3408 00038         DT .6,.7,.8,.9,.10
+0007   3406 3407 3408 00041         DT .6,  .7, .8, .9,.10
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
        3409 340A 
-000C   340B 340C 340B 00039         DT .11,.12,.11,.12
-       340C 
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  2
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-0010   340D 340E 340E 00040         DT .13,.14,.14,.16
-       3410 
-0014                  00041 END_CONVERT_HEX
-                      00042         
-0014                  00043 RETARDO_20MS
-                      00044         BANK0
-0014   1283               M         BCF STATUS,5
-0015   1303               M         BCF STATUS,6
-0016   3014           00045         MOVLW .20
-0017   00A0           00046         MOVWF CONTA_2
-0018   30FA           00047         MOVLW .250
-0019   00A1           00048         MOVWF CONTA_1
-001A   0000           00049         NOP
-001B   0BA1           00050         DECFSZ CONTA_1,F
-001C   2???           00051         GOTO $-.2
-001D   0BA0           00052         DECFSZ CONTA_2,F
-001E   2???           00053         GOTO $-.6
-001F   0008           00054         RETURN 
+000C   340B 340C 340D 00042         DT .11,.12,.13,.14,.15
+       340E 340F 
+0011   3410 3411 3412 00043         DT .16,.17,.18,.19,.20
+       3413 3414 
+0016   3415 3416 3417 00044         DT .21,.22,.23,.24,.25
+       3418 3419 
+001B                  00045 END_CONVERT_HEX
+                      00046         
+001B                  00047 RESPUESTAS_1 
+001B   0782           00048         ADDWF PCL,F
+001C   3401 3407 3417 00049         DT .1,.7,.23,.14,.25
+       340E 3419 
+0021   3415 3411 3403 00050         DT .21,.17,.3,.24,.10
+       3418 340A 
+0026   3410 3416 3403 00051         DT .16,.22,.3,.9,.5
+       3409 3405 
+002B   3410 3416 3403 00052         DT .16,.22,.3,.9,.5
+       3409 3405 
+0030   3410 3416 3403 00053         DT .16,.22,.3,.9,.5
+       3409 3405 
+0035                  00054 END_RESPUESTAS_1
                       00055         
-0020                  00056 INICIO
-                      00057         BANK3
-0020   1683               M         BSF STATUS,5
-0021   1703               M         BSF STATUS,6
+0035                  00056 RETARDO_20MS
+                      00057         BANK0
+0035   1283               M         BCF STATUS,5
+0036   1303               M         BCF STATUS,6
+0037   3014           00058         MOVLW .20
+0038   00A0           00059         MOVWF CONTA_2
+0039   30FA           00060         MOVLW .250
+003A   00A1           00061         MOVWF CONTA_1
+003B   0000           00062         NOP
+003C   0BA1           00063         DECFSZ CONTA_1,F
+003D   2???           00064         GOTO $-.2
+003E   0BA0           00065         DECFSZ CONTA_2,F
+003F   2???           00066         GOTO $-.6
+0040   0008           00067         RETURN 
+                      00068         
+0041                  00069 INICIO
+                      00070         BANK3
+0041   1683               M         BSF STATUS,5
+0042   1703               M         BSF STATUS,6
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0022   0188           00058         CLRF ANSEL
+0043   0188           00071         CLRF ANSEL
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0023   0189           00059         CLRF ANSELH
-                      00060         BANK1
-0024   1683               M         BSF STATUS,5
-0025   1303               M         BCF STATUS,6
+0044   0189           00072         CLRF ANSELH
+                      00073         BANK1
+0045   1683               M         BSF STATUS,5
+0046   1303               M         BCF STATUS,6
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0026   0188           00061         CLRF TRISD
-                      00062         BANK0
-0027   1283               M         BCF STATUS,5
-0028   1303               M         BCF STATUS,6
-0029   0186           00063         CLRF PORTB
-002A   0187           00064         CLRF PORTC
-002B   0185           00065         CLRF PORTA
-002C   0188           00066         CLRF PORTD
-002D   0189           00067         CLRF PORTE
-002E   2???           00068         CALL TecladoInicializa
-002F                  00069 LOOP    
-                      00070 
-002F   1807           00071         BTFSC PORTC,0
-0030   2???           00072         GOTO LOOP
-0031   2???           00073         CALL READ_HEX
-0032   0088           00074         MOVWF PORTD
-0033   2???           00075         CALL Teclado_EsperaDejePulsar
-0034   2???           00076         GOTO LOOP
-                      00077         
-                      00078         
-                      00079         
-                      00080         
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  3
+0047   0188           00074         CLRF TRISD
+                      00075         BANK0
+0048   1283               M         BCF STATUS,5
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00081         
-                      00082         
+0049   1303               M         BCF STATUS,6
+004A   0186           00076         CLRF PORTB
+004B   0187           00077         CLRF PORTC
+004C   0185           00078         CLRF PORTA
+004D   0188           00079         CLRF PORTD
+004E   0189           00080         CLRF PORTE
+004F   01A7           00081         CLRF CONT_WIN
+0050   2???           00082         CALL TecladoInicializa
                       00083         
-                      00084         
-                      00085         
-                      00086         
-                      00087         
-                      00088         
-                      00089         
-                      00090         
-                      00091         
-                      00092         
-                      00093         
-                      00094         
-                      00095         
-                      00096         
-                      00097         
-                      00098         
-                      00099         
-                      00100         
-                      00101         
-                      00102         
-                      00103         
-                      00104 ;============================================================================== 
-0035                  00105 READ_HEX
-0035   2???           00106         CALL Teclado_LeeOrdenTecla
-0036   1C03           00107         BTFSS STATUS,C
-0037   2???           00108         GOTO READ_HEX_END
-0038   2???           00109         CALL CONVERT_HEX
-0039   1403           00110         BSF STATUS,C
-003A                  00111 READ_HEX_END
-003A   0008           00112         RETURN
-                      00113 ;===============================================================================
-                      00114         
-003B                  00115 TecladoInicializa
-                      00116         BANK1
-003B   1683               M         BSF STATUS,5
-003C   1303               M         BCF STATUS,6
-003D   3000           00117         MOVLW B'00000000'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-003E   0086           00118         MOVWF TRISB
-003F   301F           00119         MOVLW 0x1F
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0040   0087           00120         MOVWF TRISC
-                      00121         BANK0
-0041   1283               M         BCF STATUS,5
-0042   1303               M         BCF STATUS,6
-0043   3019           00122         MOVLW .25
-0044   00A4           00123         MOVWF LAST_TECLA
-0045   0008           00124         RETURN
-                      00125 
-0046                  00126 Teclado_EsperaDejePulsar
-                      00127         BANK0
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  4
+0051                  00084 LOOP    
+                      00085         ; Fila 1
+0051   1807           00086         BTFSC PORTC,0
+0052   2???           00087         GOTO LOOP
+0053   2???           00088         CALL VALIDATE_ANSWER
+0054   1103           00089         BCF STATUS,Z
+0055   3001           00090         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+0056   02A6           00091         SUBWF CORRECTO
+0057   1D03           00092         BTFSS STATUS,Z
+0058   2???           00093         GOTO LOOP
+0059   01A6           00094         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+005A   0AA7           00095         INCF CONT_WIN
+005B   3001           00096         MOVLW B'00000001'
+005C   0088           00097         MOVWF PORTD
+005D                  00098 LOOP2
+                      00099         ; Fila 2
+005D   1887           00100         BTFSC PORTC,1
+005E   2???           00101         GOTO LOOP2
+005F   2???           00102         CALL VALIDATE_ANSWER
+0060   1103           00103         BCF STATUS,Z
+0061   3001           00104         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+0062   02A6           00105         SUBWF CORRECTO
+0063   1D03           00106         BTFSS STATUS,Z
+0064   2???           00107         GOTO LOOP2
+0065   01A6           00108         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+0066   0AA7           00109         INCF CONT_WIN
+0067   3003           00110         MOVLW B'00000011'
+0068   0088           00111         MOVWF PORTD
+                      00112         
+0069                  00113 LOOP3
+                      00114         ; Fila 3
+0069   1907           00115         BTFSC PORTC,2
+006A   2???           00116         GOTO LOOP3
+006B   2???           00117         CALL VALIDATE_ANSWER
+006C   1103           00118         BCF STATUS,Z
+006D   3001           00119         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+006E   02A6           00120         SUBWF CORRECTO
+006F   1D03           00121         BTFSS STATUS,Z
+0070   2???           00122         GOTO LOOP3
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0046   1283               M         BCF STATUS,5
-0047   1303               M         BCF STATUS,6
-0048   3000           00128         MOVLW 0x00
-0049   0086           00129         MOVWF PORTB
-004A                  00130 Teclado_SigueEsperando
-004A   2???           00131         CALL RETARDO_20MS
-004B   0806           00132         MOVF PORTB,W
-004C   3C00           00133         SUBLW 0x00
-004D   1D03           00134         BTFSS STATUS,Z
-004E   2???           00135         GOTO Teclado_SigueEsperando
-004F   0008           00136         RETURN
-                      00137 
-0050                  00138 Teclado_LeeOrdenTecla
-                      00139         
-                      00140         BANK0
-0050   1283               M         BCF STATUS,5
-0051   1303               M         BCF STATUS,6
-0052   01A3           00141         CLRF TECLA
-0053   30FE           00142         MOVLW B'11111110'
-0054                  00143 CHECK_ROW
-0054   0086           00144         MOVWF PORTB
-0055                  00145 CHECK_COL_1
-0055   1C07           00146         BTFSS PORTC,0
-0056   2???           00147         GOTO SAVE_VALUE
-0057   0AA3           00148         INCF TECLA,F
-0058                  00149 CHECK_COL_2
-0058   1C87           00150         BTFSS PORTC,1
-0059   2???           00151         GOTO SAVE_VALUE
-005A   0AA3           00152         INCF TECLA,F
-005B                  00153 CHECK_COL_3
-005B   1D07           00154         BTFSS PORTC,2
-005C   2???           00155         GOTO SAVE_VALUE
-005D   0AA3           00156         INCF TECLA,F
-005E                  00157 CHECK_COL_4
-005E   1D87           00158         BTFSS PORTC,3
-005F   2???           00159         GOTO SAVE_VALUE
-0060   0AA3           00160         INCF TECLA,F
-0061                  00161 CHECK_COL_5
-0061   1E07           00162         BTFSS PORTC,4
-0062   2???           00163         GOTO SAVE_VALUE
-0063   0AA3           00164         INCF TECLA,F    
-0064                  00165 END_COL
-0064   3024           00166         MOVLW LAST_TECLA
-0065   0223           00167         SUBWF TECLA,W
-0066   1803           00168         BTFSC STATUS,C
-0067   2???           00169         GOTO TECLA_NO_PULSE
-0068   1403           00170         BSF STATUS,C
-0069   0D06           00171         RLF PORTB,W
-006A   2???           00172         GOTO CHECK_ROW
-                      00173         
-006B                  00174 TECLA_NO_PULSE
-006B   1003           00175         BCF STATUS,C
-006C   2???           00176         GOTO KEYBOARD_END
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  5
+0071   01A6           00123         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+0072   0AA7           00124         INCF CONT_WIN
+0073   3007           00125         MOVLW B'00000111'
+0074   0088           00126         MOVWF PORTD
+                      00127 
+0075                  00128 LOOP4
+                      00129         ; Fila 4
+0075   1987           00130         BTFSC PORTC,3
+0076   2???           00131         GOTO LOOP4
+0077   2???           00132         CALL VALIDATE_ANSWER
+0078   1103           00133         BCF STATUS,Z
+0079   3001           00134         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+007A   02A6           00135         SUBWF CORRECTO
+007B   1D03           00136         BTFSS STATUS,Z
+007C   2???           00137         GOTO LOOP4
+007D   01A6           00138         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+007E   0AA7           00139         INCF CONT_WIN
+007F   300F           00140         MOVLW B'00001111'
+0080   0088           00141         MOVWF PORTD     
+0081                  00142 LOOP5
+                      00143         ; Fila 5
+0081   1A07           00144         BTFSC PORTC,4
+0082   2???           00145         GOTO LOOP5
+0083   2???           00146         CALL VALIDATE_ANSWER
+0084   1103           00147         BCF STATUS,Z
+0085   3001           00148         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+0086   02A6           00149         SUBWF CORRECTO
+0087   1D03           00150         BTFSS STATUS,Z
+0088   2???           00151         GOTO LOOP5
+0089   01A6           00152         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+008A   0AA7           00153         INCF CONT_WIN
+008B   301F           00154         MOVLW B'00011111'
+008C   0088           00155         MOVWF PORTD
+                      00156 
+008D                  00157 CLEAR
+008D   0188           00158         CLRF PORTD
+008E   2???           00159         GOTO LOOP
+                      00160         
+                      00161 ;==============================================================================
+                      00162 ;VALIDA SI LA RESPUESTA ES CORRECTA
+008F                  00163 VALIDATE_ANSWER 
+008F   2???           00164         CALL READ_HEX
+0090   00A5           00165         MOVWF RESPUESTA
+0091   2???           00166         CALL Teclado_EsperaDejePulsar
+0092   0827           00167         MOVF CONT_WIN,W
+0093   2???           00168         CALL RESPUESTAS_1
+Message[305]: Using default destination of 1 (file).
+0094   02A5           00169         SUBWF RESPUESTA
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-006D                  00177 SAVE_VALUE
-006D   0823           00178         MOVF TECLA,W
-006E   1403           00179         BSF STATUS,C
-006F                  00180 KEYBOARD_END
-006F   0008           00181         RETURN
-                      00182         
-                      00183         
-                      00184         
-20F4 3EFF             00185         END
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  6
+0095   1D03           00170         BTFSS STATUS,Z
+0096   0008           00171         RETURN
+0097   3001           00172         MOVLW .1
+0098   00A6           00173         MOVWF CORRECTO
+0099   0008           00174         RETURN
+                      00175 ;==============================================================================
+                      00176 ;==============================================================================
+                      00177 ;LEER EL VALOR PULSADO
+009A                  00178 READ_HEX
+009A   2???           00179         CALL Teclado_LeeOrdenTecla
+009B   1C03           00180         BTFSS STATUS,C
+009C   2???           00181         GOTO READ_HEX_END
+009D   2???           00182         CALL CONVERT_HEX
+009E   1403           00183         BSF STATUS,C
+009F                  00184 READ_HEX_END
+009F   0008           00185         RETURN
+                      00186 ;===============================================================================
+                      00187 ;INICIALIZAR EL TECLADO
+00A0                  00188 TecladoInicializa
+                      00189         BANK1
+00A0   1683               M         BSF STATUS,5
+00A1   1303               M         BCF STATUS,6
+00A2   3000           00190         MOVLW B'00000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00A3   0086           00191         MOVWF TRISB
+00A4   301F           00192         MOVLW 0x1F
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00A5   0087           00193         MOVWF TRISC
+                      00194         BANK0
+00A6   1283               M         BCF STATUS,5
+00A7   1303               M         BCF STATUS,6
+00A8   3019           00195         MOVLW .25
+00A9   00A4           00196         MOVWF LAST_TECLA
+00AA   0008           00197         RETURN
+                      00198 ;===============================================================================
+                      00199 ;ANTIREBOTE
+00AB                  00200 Teclado_EsperaDejePulsar
+                      00201         BANK0
+00AB   1283               M         BCF STATUS,5
+00AC   1303               M         BCF STATUS,6
+00AD   301F           00202         MOVLW 0x1F
+00AE   0087           00203         MOVWF PORTC
+00AF                  00204 Teclado_SigueEsperando
+00AF   2???           00205         CALL RETARDO_20MS
+00B0   0807           00206         MOVF PORTC,W
+00B1   3C1F           00207         SUBLW 0x1F
+00B2   1D03           00208         BTFSS STATUS,Z
+00B3   2???           00209         GOTO Teclado_SigueEsperando
+00B4   0186           00210         CLRF PORTB
+00B5   0008           00211         RETURN
+                      00212 ;===============================================================================
+                      00213 ;SCAN TECLAS
+00B6                  00214 Teclado_LeeOrdenTecla
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00215         BANK0
+00B6   1283               M         BCF STATUS,5
+00B7   1303               M         BCF STATUS,6
+00B8   01A3           00216         CLRF TECLA
+00B9   30FE           00217         MOVLW B'11111110'
+00BA                  00218 CHECK_ROW
+00BA   0086           00219         MOVWF PORTB
+00BB                  00220 CHECK_COL_1
+00BB   1C07           00221         BTFSS PORTC,0
+00BC   2???           00222         GOTO SAVE_VALUE
+00BD   0AA3           00223         INCF TECLA,F
+00BE                  00224 CHECK_COL_2
+00BE   1C87           00225         BTFSS PORTC,1
+00BF   2???           00226         GOTO SAVE_VALUE
+00C0   0AA3           00227         INCF TECLA,F
+00C1                  00228 CHECK_COL_3
+00C1   1D07           00229         BTFSS PORTC,2
+00C2   2???           00230         GOTO SAVE_VALUE
+00C3   0AA3           00231         INCF TECLA,F
+00C4                  00232 CHECK_COL_4
+00C4   1D87           00233         BTFSS PORTC,3
+00C5   2???           00234         GOTO SAVE_VALUE
+00C6   0AA3           00235         INCF TECLA,F
+00C7                  00236 CHECK_COL_5
+00C7   1E07           00237         BTFSS PORTC,4
+00C8   2???           00238         GOTO SAVE_VALUE
+00C9   0AA3           00239         INCF TECLA,F    
+00CA                  00240 END_COL
+00CA   3024           00241         MOVLW LAST_TECLA
+00CB   0223           00242         SUBWF TECLA,W
+00CC   1803           00243         BTFSC STATUS,C
+00CD   2???           00244         GOTO TECLA_NO_PULSE
+00CE   1403           00245         BSF STATUS,C
+00CF   0D06           00246         RLF PORTB,W
+00D0   2???           00247         GOTO CHECK_ROW
+                      00248         
+00D1                  00249 TECLA_NO_PULSE
+00D1   1003           00250         BCF STATUS,C
+00D2   2???           00251         GOTO KEYBOARD_END
+00D3                  00252 SAVE_VALUE
+00D3   0823           00253         MOVF TECLA,W
+00D4   1403           00254         BSF STATUS,C
+00D5                  00255 KEYBOARD_END
+00D5   0008           00256         RETURN
+                      00257         
+                      00258         
+                      00259         
+20F4 3EFF             00260         END
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  7
 
 
 SYMBOL TABLE
@@ -308,7 +406,7 @@ BRG16                             00000003
 BRG2                              00000002
 BRG3                              00000003
 BRG4                              00000004
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  7
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  8
 
 
 SYMBOL TABLE
@@ -367,31 +465,34 @@ CCPR1H                            00000016
 CCPR1L                            00000015
 CCPR2                             0000001B
 CCPR2H                            0000001C
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  8
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
 CCPR2L                            0000001B
-CHECK_COL_1                       00000055
-CHECK_COL_2                       00000058
-CHECK_COL_3                       0000005B
-CHECK_COL_4                       0000005E
-CHECK_COL_5                       00000061
-CHECK_ROW                         00000054
+CHECK_COL_1                       000000BB
+CHECK_COL_2                       000000BE
+CHECK_COL_3                       000000C1
+CHECK_COL_4                       000000C4
+CHECK_COL_5                       000000C7
+CHECK_ROW                         000000BA
 CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
 CKE                               00000006
 CKP                               00000004
+CLEAR                             0000008D
 CM1CON0                           00000107
 CM2CON0                           00000108
 CM2CON1                           00000109
 CONTA_1                           00000021
 CONTA_2                           00000020
+CONT_WIN                          00000027
 CONVERT_HEX                       00000001
+CORRECTO                          00000026
 CREN                              00000004
 CSRC                              00000007
 D                                 00000005
@@ -418,20 +519,21 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-END_COL                           00000064
-END_CONVERT_HEX                   00000014
+END_COL                           000000CA
+END_CONVERT_HEX                   0000001B
+END_RESPUESTAS_1                  00000035
 F                                 00000001
 FERR                              00000002
-FSR                               00000004
-FVREN                             00000000
-GCEN                              00000007
-GIE                               00000007
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE  9
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+FSR                               00000004
+FVREN                             00000000
+GCEN                              00000007
+GIE                               00000007
 GO                                00000001
 GO_DONE                           00000001
 GO_NOT_DONE                       00000001
@@ -441,7 +543,7 @@ I2C_READ                          00000002
 I2C_START                         00000003
 I2C_STOP                          00000004
 INDF                              00000000
-INICIO                            00000020
+INICIO                            00000041
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
@@ -459,9 +561,13 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
-KEYBOARD_END                      0000006F
+KEYBOARD_END                      000000D5
 LAST_TECLA                        00000024
-LOOP                              0000002F
+LOOP                              00000051
+LOOP2                             0000005D
+LOOP3                             00000069
+LOOP4                             00000075
+LOOP5                             00000081
 LTS                               00000001
 MC1OUT                            00000007
 MC2OUT                            00000006
@@ -477,6 +583,12 @@ MSK7                              00000007
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 NOT_BOR                           00000000
 NOT_DONE                          00000001
 NOT_PD                            00000003
@@ -485,12 +597,6 @@ NOT_RBPU                          00000007
 NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 10
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 NOT_TX8                           00000006
 NOT_W                             00000002
 NOT_WRITE                         00000002
@@ -536,6 +642,12 @@ PSSAC1                            00000003
 PSSBD0                            00000000
 PSSBD1                            00000001
 PSTRCON                           0000009D
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 PULSR                             00000002
 PULSS                             00000003
 PWM1CON                           0000009B
@@ -544,12 +656,6 @@ RA0                               00000000
 RA1                               00000001
 RA2                               00000002
 RA3                               00000003
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 11
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 RA4                               00000004
 RA5                               00000005
 RA6                               00000006
@@ -594,25 +700,27 @@ RE0                               00000000
 RE1                               00000001
 RE2                               00000002
 RE3                               00000003
-READ_HEX                          00000035
-READ_HEX_END                      0000003A
-READ_WRITE                        00000002
-RETARDO_20MS                      00000014
-RP0                               00000005
-RP1                               00000006
-RSEN                              00000001
-RX9                               00000006
-RX9D                              00000000
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 12
+READ_HEX                          0000009A
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+READ_HEX_END                      0000009F
+READ_WRITE                        00000002
+RESPUESTA                         00000025
+RESPUESTAS_1                      0000001B
+RETARDO_20MS                      00000035
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
 R_NOT_W                           00000002
 R_W                               00000002
 S                                 00000003
-SAVE_VALUE                        0000006D
+SAVE_VALUE                        000000D3
 SBOREN                            00000004
 SCKP                              00000004
 SCS                               00000000
@@ -652,6 +760,12 @@ T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
 T0SE                              00000004
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 T1CKPS0                           00000004
 T1CKPS1                           00000005
 T1CON                             00000010
@@ -662,16 +776,10 @@ T1INSYNC                          00000002
 T1OSCEN                           00000003
 T1SYNC                            00000002
 T2CKPS0                           00000000
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 13
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 T2CKPS1                           00000001
 T2CON                             00000012
 TECLA                             00000023
-TECLA_NO_PULSE                    0000006B
+TECLA_NO_PULSE                    000000D1
 TMR0                              00000001
 TMR0IE                            00000005
 TMR0IF                            00000002
@@ -711,6 +819,12 @@ TRISB6                            00000006
 TRISB7                            00000007
 TRISC                             00000087
 TRISC0                            00000000
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TRISC1                            00000001
 TRISC2                            00000002
 TRISC3                            00000003
@@ -721,12 +835,6 @@ TRISC7                            00000007
 TRISD                             00000088
 TRISD0                            00000000
 TRISD1                            00000001
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 14
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISD2                            00000002
 TRISD3                            00000003
 TRISD4                            00000004
@@ -753,14 +861,15 @@ TXIE                              00000004
 TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
-TecladoInicializa                 0000003B
-Teclado_EsperaDejePulsar          00000046
-Teclado_LeeOrdenTecla             00000050
-Teclado_SigueEsperando            0000004A
+TecladoInicializa                 000000A0
+Teclado_EsperaDejePulsar          000000AB
+Teclado_LeeOrdenTecla             000000B6
+Teclado_SigueEsperando            000000AF
 UA                                00000001
 ULPWUE                            00000005
 ULPWUIE                           00000002
 ULPWUIF                           00000002
+VALIDATE_ANSWER                   0000008F
 VCFG0                             00000004
 VCFG1                             00000005
 VR0                               00000000
@@ -769,6 +878,12 @@ VR2                               00000002
 VR3                               00000003
 VRCON                             00000097
 VREN                              00000007
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 VROE                              00000006
 VRR                               00000005
 VRSS                              00000004
@@ -780,12 +895,6 @@ WDTPS1                            00000002
 WDTPS2                            00000003
 WDTPS3                            00000004
 WPUB                              00000095
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 15
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 WPUB0                             00000000
 WPUB1                             00000001
 WPUB2                             00000002
@@ -799,8 +908,8 @@ WREN                              00000002
 WRERR                             00000003
 WUE                               00000001
 Z                                 00000002
-_.org_0_001C                      0000001C
-_.org_0_001E                      0000001E
+_.org_0_003D                      0000003D
+_.org_0_003F                      0000003F
 _BOR21V                           00003EFF
 _BOR40V                           00003FFF
 _BOR4V_BOR21V                     00003EFF
@@ -828,6 +937,12 @@ _EXTRCIO                          00003FFE
 _EXTRC_OSC_CLKOUT                 00003FFF
 _EXTRC_OSC_NOCLKOUT               00003FFE
 _FCMEN_OFF                        000037FF
+MPASM 5.73                          MAIN.ASM   10-14-2018  21:19:24         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _FCMEN_ON                         00003FFF
 _FOSC_EC                          00003FFB
 _FOSC_EXTRC_CLKOUT                00003FFF
@@ -839,12 +954,6 @@ _FOSC_LP                          00003FF8
 _FOSC_XT                          00003FF9
 _HS_OSC                           00003FFA
 _IDLOC0                           00002000
-MPASM 5.73                          MAIN.ASM   10-14-2018  16:30:26         PAGE 16
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _IDLOC1                           00002001
 _IDLOC2                           00002002
 _IDLOC3                           00002003
@@ -874,6 +983,6 @@ __16F887                          00000001
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     5 reported,     0 suppressed
+Messages :    16 reported,     0 suppressed
 
 
