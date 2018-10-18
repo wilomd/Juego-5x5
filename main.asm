@@ -1,38 +1,46 @@
 	List p=16f887
 	#include <p16f887.inc>
+	
 	__CONFIG H'2007', H'3FFC' & H'3FF7' & H'3FFF' & H'3FFF' & H'3FFF' & H'3FFF' & H'3CFF' & H'3BFF' & H'37FF' & H'2FFF' & H'3FFF'
 	__CONFIG H'2008', H'3EFF' & H'3FFF'	
 
 	
 	 
 ;===============================================================================
-;Definicion de las macros para cambiar de bancos
+;             Definicion de las macros para cambiar de bancos
+;===============================================================================
+
 BANK0	MACRO
 	BCF STATUS,5
 	BCF STATUS,6
 	ENDM
+	
 BANK1	MACRO
 	BSF STATUS,5
 	BCF STATUS,6
 	ENDM
+	
 BANK2	MACRO
 	BCF STATUS,5
 	BSF STATUS,6
 	ENDM
+	
 BANK3	MACRO
 	BSF STATUS,5
 	BSF STATUS,6
 	ENDM
 	
-CONTA_2	 EQU 0x20
-CONTA_1	 EQU 0x21
-BIT	 EQU 0x22
-TECLA	 EQU 0x23
-LAST_TECLA EQU 0x24
-RESPUESTA EQU 0x25
-CORRECTO EQU 0x26
-CONT_WIN EQU 0x27
-	ORG H'0'
+CONTA_2	    EQU 0x20
+CONTA_1	    EQU 0x21
+BIT	    EQU 0x22
+TECLA	    EQU 0x23
+LAST_TECLA  EQU 0x24
+RESPUESTA   EQU 0x25
+CORRECTO    EQU 0x26
+CONT_WIN    EQU 0x27
+ 
+	
+	ORG H'01'
 	GOTO INICIO
 
 CONVERT_HEX
@@ -59,7 +67,7 @@ RETARDO_20MS
 	MOVWF CONTA_2
 	MOVLW .250
 	MOVWF CONTA_1
-	NOP
+2	NOP
 	DECFSZ CONTA_1,F
 	GOTO $-.2
 	DECFSZ CONTA_2,F
@@ -78,7 +86,9 @@ INICIO
 	CLRF PORTA
 	CLRF PORTD
 	CLRF PORTE
+	
 	CLRF CONT_WIN
+	
 	CALL TecladoInicializa
 	
 LOOP	
@@ -160,7 +170,9 @@ CLEAR
 	
 ;==============================================================================
 ;VALIDA SI LA RESPUESTA ES CORRECTA
-VALIDATE_ANSWER	
+;==============================================================================
+
+	VALIDATE_ANSWER	
 	CALL READ_HEX
 	MOVWF RESPUESTA
 	CALL Teclado_EsperaDejePulsar
@@ -173,8 +185,9 @@ VALIDATE_ANSWER
 	MOVWF CORRECTO
 	RETURN
 ;==============================================================================
+;LEER EL VALOR EN TECLADO 5x5
 ;==============================================================================
-;LEER EL VALOR PULSADO
+
 READ_HEX
 	CALL Teclado_LeeOrdenTecla
 	BTFSS STATUS,C
@@ -184,7 +197,8 @@ READ_HEX
 READ_HEX_END
 	RETURN
 ;===============================================================================
-;INICIALIZAR EL TECLADO
+;INICIALIZAR EL TECLADO 5x5
+;===============================================================================
 TecladoInicializa
 	BANK1
 	MOVLW B'00000000'
@@ -196,7 +210,8 @@ TecladoInicializa
 	MOVWF LAST_TECLA
 	RETURN
 ;===============================================================================
-;ANTIREBOTE
+;ANTIREBOTE PARA LOS PULSADORES
+;===============================================================================
 Teclado_EsperaDejePulsar
 	BANK0
 	MOVLW 0x1F
@@ -210,7 +225,9 @@ Teclado_SigueEsperando
 	CLRF PORTB
 	RETURN
 ;===============================================================================
-;SCAN TECLAS
+; SCAN TECLAS PARA SELECION DE LA RESPUESTA
+;===============================================================================
+
 Teclado_LeeOrdenTecla
 	BANK0
 	CLRF TECLA
@@ -254,7 +271,6 @@ SAVE_VALUE
 	BSF STATUS,C
 KEYBOARD_END
 	RETURN
-	
-	
+		
 	
 	END
