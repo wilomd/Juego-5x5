@@ -104,6 +104,9 @@ INICIO
 	ClSPort
 	
 	CALL TecladoInicializa
+	; Pregunta si se Pulso el Boton de inicio del Sistema
+	;en caso de no ser pulsado cada 5 Minutos Encender en secuencia los 
+	; Bombillo para llamar la atencion del Juego a los niños
 	
 LOOP	
 	; Fila 1
@@ -182,8 +185,13 @@ CLEAR
 	CLRF PORTD
 	GOTO LOOP
 	
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	
+;		    inicio de las Rutinas (call)
+	
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 ;==============================================================================
-;VALIDA SI LA RESPUESTA ES CORRECTA
+;                   VALIDA SI LA RESPUESTA ES CORRECTA
 ;==============================================================================
 
 VALIDATE_ANSWER	
@@ -224,7 +232,7 @@ TecladoInicializa
 	MOVWF LAST_TECLA
 	RETURN
 ;===============================================================================
-;ANTIREBOTE PARA LOS PULSADORES
+;                      ANTIREBOTE PARA LOS PULSADORES
 ;===============================================================================
 Teclado_EsperaDejePulsar
 	BANK0
@@ -239,7 +247,7 @@ Teclado_SigueEsperando
 	CLRF PORTB
 	RETURN
 ;===============================================================================
-; SCAN TECLAS PARA SELECION DE LA RESPUESTA
+;               SCAN TECLAS PARA SELECION DE LA RESPUESTA
 ;===============================================================================
 
 Teclado_LeeOrdenTecla
