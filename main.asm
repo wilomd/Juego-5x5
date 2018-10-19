@@ -67,7 +67,7 @@ RETARDO_20MS
 	MOVWF CONTA_2
 	MOVLW .250
 	MOVWF CONTA_1
-2	NOP
+	NOP
 	DECFSZ CONTA_1,F
 	GOTO $-.2
 	DECFSZ CONTA_2,F
@@ -172,7 +172,7 @@ CLEAR
 ;VALIDA SI LA RESPUESTA ES CORRECTA
 ;==============================================================================
 
-	VALIDATE_ANSWER	
+VALIDATE_ANSWER	
 	CALL READ_HEX
 	MOVWF RESPUESTA
 	CALL Teclado_EsperaDejePulsar
