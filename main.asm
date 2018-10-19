@@ -4,8 +4,7 @@
 	__CONFIG H'2007', H'3FFC' & H'3FF7' & H'3FFF' & H'3FFF' & H'3FFF' & H'3FFF' & H'3CFF' & H'3BFF' & H'37FF' & H'2FFF' & H'3FFF'
 	__CONFIG H'2008', H'3EFF' & H'3FFF'	
 
-	
-	 
+;ver 01.1
 ;===============================================================================
 ;             Definicion de las macros para cambiar de bancos
 ;===============================================================================
@@ -30,6 +29,24 @@ BANK3	MACRO
 	BSF STATUS,6
 	ENDM
 	
+ClSPort MACRO
+	BCF STATUS,5
+	BCF STATUS,6
+	CLRF PORTB
+	CLRF PORTC
+	CLRF PORTA
+	CLRF PORTD
+	CLRF PORTE
+	ENDM
+	
+DigPort MACRO
+	BSF STATUS,5
+	BSF STATUS,6
+	CLRF ANSEL
+	CLRF ANSELH
+	ENDM
+	
+	
 CONTA_2	    EQU 0x20
 CONTA_1	    EQU 0x21
 BIT	    EQU 0x22
@@ -42,7 +59,10 @@ CONT_WIN    EQU 0x27
 	
 	ORG H'01'
 	GOTO INICIO
-
+	
+	ORG 04H
+	;HACER INT de reinicio o WD funcione....
+	
 CONVERT_HEX
 	ADDWF PCL,F
 	DT .1,  .2, .3, .4, .5
@@ -75,19 +95,13 @@ RETARDO_20MS
 	RETURN 
 	
 INICIO
-	BANK3
-	CLRF ANSEL
-	CLRF ANSELH
+	
+	DigPort
 	BANK1
 	CLRF TRISD
 	BANK0
-	CLRF PORTB
-	CLRF PORTC
-	CLRF PORTA
-	CLRF PORTD
-	CLRF PORTE
-	
 	CLRF CONT_WIN
+	ClSPort
 	
 	CALL TecladoInicializa
 	
