@@ -1,11 +1,31 @@
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  1
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001         List p=16f887
-                      00002         #include <p16f887.inc>
+                      00001 ; FORMATO DEL PANEL
+                      00002         
+                      00003 ;       A   a        1,  2,  3,  4,  5  
+                      00004 ;       B   b        6,  7,  8,  9, 10
+                      00005 ;       C   c       11, 12, 13, 14, 15
+                      00006 ;       D   d       16, 17, 18, 19, 20
+                      00007 ;       E   e       21, 22, 23, 24, 25
+                      00008         
+                      00009         
+                      00010 ; 1ra columna Animales solo bombillos 
+                      00011         
+                      00012 ; 2da Columna Preguntas solo bombillos
+                      00013         
+                      00014 ; 25 bombillos y 25 pulsadores panel de Respuesta
+                      00015 
+                      00016 ; 1 Pulsador de inicio del Sistema      
+                      00017 
+                      00018 ; 1 Salida de Audio para Tono (acierto o respuesta Errada
+                      00019             
+                      00020         
+                      00021         List p=16f887
+                      00022         #include <p16f887.inc>
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -16,513 +36,524 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 ;==========================================================================
                       00009 
                       00810         LIST
-                      00003         
-2007   20F4           00004         __CONFIG H'2007', H'3FFC' & H'3FF7' & H'3FFF' & H'3FFF' & H'3FFF' & H'3FFF' & H'3CFF' & H'3BFF' 
+                      00023         
+2007   20F4           00024         __CONFIG H'2007', H'3FFC' & H'3FF7' & H'3FFF' & H'3FFF' & H'3FFF' & H'3FFF' & H'3CFF' & H'3BFF' 
                             & H'37FF' & H'2FFF' & H'3FFF'
-2008   3EFF           00005         __CONFIG H'2008', H'3EFF' & H'3FFF'     
-                      00006 
-                      00007 ;ver 01.1
-                      00008 ;===============================================================================
-                      00009 ;             Definicion de las macros para cambiar de bancos
-                      00010 ;===============================================================================
-                      00011 
-                      00012 BANK0   MACRO
-                      00013         BCF STATUS,5
-                      00014         BCF STATUS,6
-                      00015         ENDM
-                      00016         
-                      00017 BANK1   MACRO
-                      00018         BSF STATUS,5
-                      00019         BCF STATUS,6
-                      00020         ENDM
-                      00021         
-                      00022 BANK2   MACRO
-                      00023         BCF STATUS,5
-                      00024         BSF STATUS,6
-                      00025         ENDM
-                      00026         
-                      00027 BANK3   MACRO
-                      00028         BSF STATUS,5
-                      00029         BSF STATUS,6
-                      00030         ENDM
-                      00031         
-                      00032 ClSPort MACRO
-                      00033         BANK0
-                      00034         CLRF PORTB
-                      00035         CLRF PORTC
-                      00036         CLRF PORTA
-                      00037         CLRF PORTD
-                      00038         CLRF PORTE
-                      00039         ENDM
-                      00040         
-                      00041 DigPort MACRO
-                      00042         BANK3
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  2
+2008   3EFF           00025         __CONFIG H'2008', H'3EFF' & H'3FFF'     
+                      00026 
+                      00027 ;ver 01.1
+                      00028 ;===============================================================================
+                      00029 ;             Definicion de las macros para cambiar de bancos
+                      00030 ;===============================================================================
+                      00031 
+                      00032 BANK0   MACRO
+                      00033         BCF STATUS,5
+                      00034         BCF STATUS,6
+                      00035         ENDM
+                      00036         
+                      00037 BANK1   MACRO
+                      00038         BSF STATUS,5
+                      00039         BCF STATUS,6
+                      00040         ENDM
+                      00041         
+                      00042 BANK2   MACRO
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00043         CLRF ANSEL
-                      00044         CLRF ANSELH
+                      00043         BCF STATUS,5
+                      00044         BSF STATUS,6
                       00045         ENDM
                       00046         
-                      00047         
-  00000020            00048 CONTA_2     EQU 0x20
-  00000021            00049 CONTA_1     EQU 0x21
-  00000022            00050 BIT         EQU 0x22
-  00000023            00051 TECLA       EQU 0x23
-  00000024            00052 LAST_TECLA  EQU 0x24
-  00000025            00053 RESPUESTA   EQU 0x25
-  00000026            00054 CORRECTO    EQU 0x26
-  00000027            00055 CONT_WIN    EQU 0x27
-                      00056     
-  00000030            00057 ANIMALES    EQU 0X30
-  00000031            00058 PREGUNTA    EQU 0X31
-  00000032            00059 TEMP        EQU 0X32
-                      00060  
-                      00061         
-                      00062         ORG H'01'
-0001   2???           00063         GOTO INICIO
-                      00064         
-                      00065         ORG 04H
-                      00066         ;HACER INT de reinicio o WD funcione....
+                      00047 BANK3   MACRO
+                      00048         BSF STATUS,5
+                      00049         BSF STATUS,6
+                      00050         ENDM
+                      00051         
+                      00052 ClSPort MACRO
+                      00053         BANK0
+                      00054         CLRF PORTB
+                      00055         CLRF PORTC
+                      00056         CLRF PORTA
+                      00057         CLRF PORTD
+                      00058         CLRF PORTE
+                      00059         ENDM
+                      00060         
+                      00061 DigPort MACRO
+                      00062         BANK3
+                      00063         CLRF ANSEL
+                      00064         CLRF ANSELH
+                      00065         ENDM
+                      00066         
                       00067         
-0004                  00068 CONVERT_HEX
-0004   0782           00069         ADDWF PCL,F
-0005   3401 3402 3403 00070         DT  .1,  .2, .3, .4, .5
+  00000020            00068 CONTA_2     EQU 0x20
+  00000021            00069 CONTA_1     EQU 0x21
+  00000022            00070 BIT         EQU 0x22
+  00000023            00071 TECLA       EQU 0x23
+  00000024            00072 LAST_TECLA  EQU 0x24
+  00000025            00073 RESPUESTA   EQU 0x25
+  00000026            00074 CORRECTO    EQU 0x26
+  00000027            00075 CONT_WIN    EQU 0x27
+                      00076     
+  00000030            00077 ANIMALES    EQU 0X30
+  00000031            00078 PREGUNTA    EQU 0X31
+  00000032            00079 TEMP        EQU 0X32
+  00000033            00080 CONTPRGTA   EQU 0X33        
+                      00081             
+                      00082  
+                      00083         
+                      00084         ORG H'01'
+0001   2???           00085         GOTO INICIO
+                      00086         
+                      00087         ORG 04H
+                      00088         ;HACER INT de reinicio o WD funcione....
+                      00089         
+0004                  00090 CONVERT_HEX
+0004   0782           00091         ADDWF PCL,F
+0005   3401 3402 3403 00092         DT  .1,  .2, .3, .4, .5
        3404 3405 
-000A   3406 3407 3408 00071         DT  .6,  .7, .8, .9,.10
+000A   3406 3407 3408 00093         DT  .6,  .7, .8, .9,.10
        3409 340A 
-000F   340B 340C 340D 00072         DT .11, .12,.13,.14,.15
-       340E 340F 
-0014   3410 3411 3412 00073         DT .16, .17,.18,.19,.20
-       3413 3414 
-0019   3415 3416 3417 00074         DT .21, .22,.23,.24,.25
-       3418 3419 
-001E                  00075 END_CONVERT_HEX
-                      00076          
-001E                  00077 RESPUESTAS_1 
-001E   0782           00078         ADDWF PCL,F
-001F   3401 3407 3417 00079         DT .1,.7,.23,.14,.25
-       340E 3419 
-0024   3415 3411 3403 00080         DT .21,.17,.3,.24,.10
-       3418 340A 
-0029   3410 3416 3403 00081         DT .16,.22,.3,.9,.5
-       3409 3405 
-002E   3410 3416 3403 00082         DT .16,.22,.3,.9,.5
-       3409 3405 
-0033   3410 3416 3403 00083         DT .16,.22,.3,.9,.5
-       3409 3405 
-0038                  00084 END_RESPUESTAS_1
-                      00085         
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  3
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0038                  00086 RETARDO_20MS
-                      00087         BANK0
+000F   340B 340C 340D 00094         DT .11, .12,.13,.14,.15
+       340E 340F 
+0014   3410 3411 3412 00095         DT .16, .17,.18,.19,.20
+       3413 3414 
+0019   3415 3416 3417 00096         DT .21, .22,.23,.24,.25
+       3418 3419 
+001E                  00097 END_CONVERT_HEX
+                      00098          
+001E                  00099 RESPUESTAS_1 
+001E   0782           00100         ADDWF PCL,F
+001F   3401 3407 3417 00101         DT .1,.7,.23,.14,.25
+       340E 3419 
+0024   3415 3411 3403 00102         DT .21,.17,.3,.24,.10
+       3418 340A 
+0029   3410 3416 3403 00103         DT .16,.22,.3,.9,.5
+       3409 3405 
+002E   3410 3416 3403 00104         DT .16,.22,.3,.9,.5
+       3409 3405 
+0033   3410 3416 3403 00105         DT .16,.22,.3,.9,.5
+       3409 3405 
+0038                  00106 END_RESPUESTAS_1
+                      00107         
+0038                  00108 RETARDO_20MS
+                      00109         BANK0
 0038   1283               M         BCF STATUS,5
 0039   1303               M         BCF STATUS,6
-003A   3014           00088         MOVLW .20
-003B   00A0           00089         MOVWF CONTA_2
-003C   30FA           00090         MOVLW .250
-003D   00A1           00091         MOVWF CONTA_1
-003E   0000           00092         NOP
-003F   0BA1           00093         DECFSZ CONTA_1,F
-0040   2???           00094         GOTO $-.2
-0041   0BA0           00095         DECFSZ CONTA_2,F
-0042   2???           00096         GOTO $-.6
-0043   0008           00097         RETURN 
-                      00098 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-                      00099         
-                      00100 ;                       inicia el programa      
-                      00101         
-                      00102 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&        
-                      00103 
-                      00104 
-0044                  00105 INICIO
-                      00106         
-                      00107         
-                      00108         
-                      00109         
-0044   3001           00110         MOVLW .1
-0045   00B0           00111         MOVWF ANIMALES
-0046   00B1           00112         MOVWF PREGUNTA
-                      00113         
-                      00114         DigPort                 ;inicializa los puertos en digital  
+003A   3014           00110         MOVLW .20
+003B   00A0           00111         MOVWF CONTA_2
+003C   30FA           00112         MOVLW .250
+003D   00A1           00113         MOVWF CONTA_1
+003E   0000           00114         NOP
+003F   0BA1           00115         DECFSZ CONTA_1,F
+0040   2???           00116         GOTO $-.2
+0041   0BA0           00117         DECFSZ CONTA_2,F
+0042   2???           00118         GOTO $-.6
+0043   0008           00119         RETURN 
+                      00120 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+                      00121         
+                      00122 ;                       inicia el programa      
+                      00123         
+                      00124 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&        
+                      00125 
+0044                  00126 INICIO
+                      00127         
+                      00128         DigPort                 ;inicializa los puertos en digital  
                           M         BANK3
-0047   1683               M         BSF STATUS,5
-0048   1703               M         BSF STATUS,6
+0044   1683               M         BSF STATUS,5
+0045   1703               M         BSF STATUS,6
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0049   0188               M         CLRF ANSEL
+0046   0188               M         CLRF ANSEL
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-004A   0189               M         CLRF ANSELH
-                      00115         
-004B   2???           00116         CALL TecladoInicializa   ;PUERTO B SALIDA / PUERTO C ENTRADA OJO PULL UP
-                      00117         
-                      00118         
-                      00119         BANK1
-004C   1683               M         BSF STATUS,5
-004D   1303               M         BCF STATUS,6
-004E   301F           00120         MOVLW 01FH           
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-004F   0089           00121         MOVWF TRISE         ;PUERTO E ENTRADA
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0050   0185           00122         CLRF TRISA          ;PUERTO A SALIDA BOMBILLOS ANIMAL
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0051   0188           00123         CLRF TRISD          ;PUERTO D SALIDA BOMBILLOS PREGUNTA
-                      00124         
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  4
+0047   0189               M         CLRF ANSELH
+0048   2???           00129         CALL TecladoInicializa   ;PUERTO B SALIDA / PUERTO C ENTRADA OJO PULL UP
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00125         BANK0
-0052   1283               M         BCF STATUS,5
-0053   1303               M         BCF STATUS,6
-                      00126         
-0054   01A7           00127         CLRF CONT_WIN
-0055   3001           00128         MOVLW 01H
-0056   00B0           00129         MOVWF ANIMALES 
-0057   00B1           00130         MOVWF PREGUNTA
+                      00130         
                       00131         
-                      00132         ClSPort
-                          M         BANK0
-0058   1283               M         BCF STATUS,5
-0059   1303               M         BCF STATUS,6
-005A   0186               M         CLRF PORTB
-005B   0187               M         CLRF PORTC
-005C   0185               M         CLRF PORTA
-005D   0188               M         CLRF PORTD
-005E   0189               M         CLRF PORTE
-                      00133         
-                      00134 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&        
-                      00135         
-                      00136         
-005F                  00137 INICIA          
-                      00138     ;CALL GUSANOPANT     ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
+                      00132         BANK1
+0049   1683               M         BSF STATUS,5
+004A   1303               M         BCF STATUS,6
+004B   301F           00133         MOVLW 01FH           
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004C   0089           00134         MOVWF TRISE         ;PUERTO E ENTRADA para Pulsador de Inicio Programa
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004D   0185           00135         CLRF TRISA          ;PUERTO A SALIDA BOMBILLOS ANIMAL
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004E   0188           00136         CLRF TRISD          ;PUERTO D SALIDA BOMBILLOS PREGUNTA
+                      00137         
+                      00138         BANK0
+004F   1283               M         BCF STATUS,5
+0050   1303               M         BCF STATUS,6
                       00139         
-005F   2???           00140         CALL RETARDO_20MS   ;USAR INT PARA QUE SALTE AL INICIO?
-0060   1C09           00141         BTFSS PORTE,0       ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
-0061   2???           00142         GOTO INICIA
-                      00143 ; cambiar esto con uno de los botones de Puerto B para trabajar con la int
-                      00144 ; de cambio de estado y dejar el PIC en Sleep   
-                      00145         
-                      00146 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-                      00147         
-                      00148 ;                           ANIMAL1 PREGUNTAS   
-                      00149 
-                      00150 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+0051   01A7           00140         CLRF CONT_WIN
+                      00141         
+0052   3001           00142         MOVLW .1
+0053   00B0           00143         MOVWF ANIMALES
+0054   00B1           00144         MOVWF PREGUNTA
+0055   3019           00145         MOVLW .25
+0056   00B3           00146         MOVWF CONTPRGTA
+                      00147 
+                      00148         ClSPort
+                          M         BANK0
+0057   1283               M         BCF STATUS,5
+0058   1303               M         BCF STATUS,6
+0059   0186               M         CLRF PORTB
+005A   0187               M         CLRF PORTC
+005B   0185               M         CLRF PORTA
+005C   0188               M         CLRF PORTD
+005D   0189               M         CLRF PORTE
+                      00149         
+                      00150 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&        
                       00151         
-0062   1405           00152         BSF PORTA,0       ;PRIMER ANIMAL
-0063   1408           00153         BSF PORTD,0       ;PRIMERA PREGUNTA ACTIVA
-                      00154         
-0064                  00155 SISTPREG
-                      00156         ;CALL ESPERAR POR TECLA CORRECTA DE LA PREGUNTA X
-                      00157         ;CALL TONO DE CORRECTO
-                      00158         ;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-                      00159         ;DECREMENTA CONTADOR PARA LAS 25 PREGUNTAS
-                      00160         
-0064   2???           00161         CALL VERIFICA1  ;SIGUIENTE PREGUNTA Y/O ANIMAL
-                      00162                         ;PREGUNTA SI ES EL FINAL DEL CONTADOR DE LAS PREGUNTAS EN CASO 
-                      00163                         ; DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
-0065   2???           00164         GOTO SISTPREG
-                      00165         
-                      00166         ;COMPLETAR LAS 25 PREGUNTAS
+                      00152         
+005E                  00153 INICIA          
+                      00154     ;CALL GUSANOPANT     ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
+                      00155         
+005E   2???           00156         CALL RETARDO_20MS   ;USAR INT RB CAMBIO ESTADO PARA QUE SALTE AL INICIO?
+005F   1C09           00157         BTFSS PORTE,0       ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
+0060   2???           00158         GOTO INICIA
+                      00159 ; cambiar esto con uno de los botones de Puerto B para trabajar con la int
+                      00160 ; de cambio de estado y dejar el PIC en Sleep   
+                      00161         
+                      00162 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+                      00163         
+                      00164 ;                           ANIMALES Y PREGUNTAS        
+                      00165 
+                      00166 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
                       00167         
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  5
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00168 ; ES EL MISMO SISTEMA SE PUEDE HACER CON ROTACION DE BITS PARA TODAS LAS PREGUNTAS
-                      00169 
+0061   1405           00168         BSF PORTA,0       ;PRIMER ANIMAL
+0062   1408           00169         BSF PORTD,0       ;PRIMERA PREGUNTA ACTIVA
                       00170         
-                      00171         
-                      00172         
-Warning[207]: Found label after column 1. (LOOP)
-0066                  00173         LOOP    
-                      00174         ; Fila 1
-0066   1807           00175         BTFSC PORTC,0
-0067   2???           00176         GOTO LOOP
-0068   2???           00177         CALL VALIDATE_ANSWER
-0069   1103           00178         BCF STATUS,Z
-006A   3001           00179         MOVLW .1
-Message[305]: Using default destination of 1 (file).
-006B   02A6           00180         SUBWF CORRECTO
-                      00181         
-006C   1D03           00182         BTFSS STATUS,Z
-006D   2???           00183         GOTO LOOP
+0063                  00171 SISTPREG
+                      00172         ;CALL ESPERAR POR TECLA CORRECTA DE LA PREGUNTA X
+                      00173         ;TONO DE CORRECTO O INCORRECTO ESTA EN LA ESPERA DE LA TECLA 
+                      00174         
+                      00175         ;TABLA DE 25 DATOS CON EL VALOR DE LA RESPUESTA CORRECTA
+                      00176         ;PARA FUNCIONAR CON EN CONTADOR DE PREGUNTAS
+                      00177         
+                      00178         ;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA
+                      00179         
+                      00180         
+0063   0BB3           00181         DECFSZ CONTPRGTA,F  ;DECREMENTA  CONTADOR PARA LAS 25 PREGUNTAS
+0064   2???           00182         GOTO PROXIMO
+0065   2???           00183         GOTO INICIA
                       00184         
-006E   01A6           00185         CLRF CORRECTO
+0066                  00185 PROXIMO
+0066   2???           00186         CALL VERIFICA1  ;SIGUIENTE PREGUNTA Y/O ANIMAL
+                      00187                         ;PREGUNTA SI ES EL FINAL DEL CONTADOR DE LAS PREGUNTAS EN CASO 
+                      00188                         ; DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
+0067   2???           00189         GOTO SISTPREG
+                      00190         
+                      00191         ;COMPLETAR LAS 25 PREGUNTAS
+                      00192         
+                      00193 
+                      00194         
+                      00195         
+                      00196 ;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                      00197         
+                      00198         ;  rutinas de ?????????
+                      00199          
+                      00200 ;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::    
+0068                  00201 LOOP    
+                      00202         ; Fila 1 de Preguntas
+0068   1807           00203         BTFSC PORTC,0    ; mimo valor de pregunta
+0069   2???           00204         GOTO LOOP
+006A   2???           00205         CALL VALIDATE_ANSWER
+006B   1103           00206         BCF STATUS,Z
+006C   3001           00207         MOVLW .1
 Message[305]: Using default destination of 1 (file).
-006F   0AA7           00186         INCF CONT_WIN
-0070   3001           00187         MOVLW B'00000001'
-0071   0088           00188         MOVWF PORTD
-0072                  00189 LOOP2
-                      00190         ; Fila 2
-0072   1887           00191         BTFSC PORTC,1
-0073   2???           00192         GOTO LOOP2
-0074   2???           00193         CALL VALIDATE_ANSWER
-0075   1103           00194         BCF STATUS,Z
-0076   3001           00195         MOVLW .1
+006D   02A6           00208         SUBWF CORRECTO
+                      00209         
+006E   1D03           00210         BTFSS STATUS,Z
+006F   2???           00211         GOTO LOOP       ;falta tono de error
+                      00212         
+0070   01A6           00213         CLRF CORRECTO
 Message[305]: Using default destination of 1 (file).
-0077   02A6           00196         SUBWF CORRECTO
-0078   1D03           00197         BTFSS STATUS,Z
-0079   2???           00198         GOTO LOOP2
-007A   01A6           00199         CLRF CORRECTO
-Message[305]: Using default destination of 1 (file).
-007B   0AA7           00200         INCF CONT_WIN
-007C   3003           00201         MOVLW B'00000011'
-007D   0088           00202         MOVWF PORTD
-                      00203         
-007E                  00204 LOOP3
-                      00205         ; Fila 3
-007E   1907           00206         BTFSC PORTC,2
-007F   2???           00207         GOTO LOOP3
-0080   2???           00208         CALL VALIDATE_ANSWER
-0081   1103           00209         BCF STATUS,Z
-0082   3001           00210         MOVLW .1
-Message[305]: Using default destination of 1 (file).
-0083   02A6           00211         SUBWF CORRECTO
-0084   1D03           00212         BTFSS STATUS,Z
-0085   2???           00213         GOTO LOOP3
-0086   01A6           00214         CLRF CORRECTO
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  6
+0071   0AA7           00214         INCF CONT_WIN    ;falta tono de bueno
+0072   3001           00215         MOVLW B'00000001'
+0073   0088           00216         MOVWF PORTD
+                      00217         
+                      00218         ;estas 5 preguntas son muy parecidas hacer una sola generica 
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+                      00219         ; que funcione igual las 5 veces del  programa
+                      00220         
+0074                  00221 LOOP2
+                      00222         ; Fila 2 de Preguntas
+0074   1887           00223         BTFSC PORTC,1
+0075   2???           00224         GOTO LOOP2
+0076   2???           00225         CALL VALIDATE_ANSWER
+0077   1103           00226         BCF STATUS,Z
+0078   3001           00227         MOVLW .1
 Message[305]: Using default destination of 1 (file).
-0087   0AA7           00215         INCF CONT_WIN
-0088   3007           00216         MOVLW B'00000111'
-0089   0088           00217         MOVWF PORTD
-                      00218 
-008A                  00219 LOOP4
-                      00220         ; Fila 4
-008A   1987           00221         BTFSC PORTC,3
-008B   2???           00222         GOTO LOOP4
-008C   2???           00223         CALL VALIDATE_ANSWER
-008D   1103           00224         BCF STATUS,Z
-008E   3001           00225         MOVLW .1
+0079   02A6           00228         SUBWF CORRECTO
+007A   1D03           00229         BTFSS STATUS,Z
+007B   2???           00230         GOTO LOOP2
+007C   01A6           00231         CLRF CORRECTO
 Message[305]: Using default destination of 1 (file).
-008F   02A6           00226         SUBWF CORRECTO
-0090   1D03           00227         BTFSS STATUS,Z
-0091   2???           00228         GOTO LOOP4
-0092   01A6           00229         CLRF CORRECTO
+007D   0AA7           00232         INCF CONT_WIN
+007E   3003           00233         MOVLW B'00000011'
+007F   0088           00234         MOVWF PORTD
+                      00235         
+0080                  00236 LOOP3
+                      00237         ; Fila 3 de Preguntas
+0080   1907           00238         BTFSC PORTC,2
+0081   2???           00239         GOTO LOOP3
+0082   2???           00240         CALL VALIDATE_ANSWER
+0083   1103           00241         BCF STATUS,Z
+0084   3001           00242         MOVLW .1
 Message[305]: Using default destination of 1 (file).
-0093   0AA7           00230         INCF CONT_WIN
-0094   300F           00231         MOVLW B'00001111'
-0095   0088           00232         MOVWF PORTD     
-0096                  00233 LOOP5
-                      00234         ; Fila 5
-0096   1A07           00235         BTFSC PORTC,4
-0097   2???           00236         GOTO LOOP5
-0098   2???           00237         CALL VALIDATE_ANSWER
-0099   1103           00238         BCF STATUS,Z
-009A   3001           00239         MOVLW .1
+0085   02A6           00243         SUBWF CORRECTO
+0086   1D03           00244         BTFSS STATUS,Z
+0087   2???           00245         GOTO LOOP3
+0088   01A6           00246         CLRF CORRECTO
 Message[305]: Using default destination of 1 (file).
-009B   02A6           00240         SUBWF CORRECTO
-009C   1D03           00241         BTFSS STATUS,Z
-009D   2???           00242         GOTO LOOP5
-009E   01A6           00243         CLRF CORRECTO
+0089   0AA7           00247         INCF CONT_WIN
+008A   3007           00248         MOVLW B'00000111'
+008B   0088           00249         MOVWF PORTD
+                      00250 
+008C                  00251 LOOP4
+                      00252         ; Fila 4 de Preguntas
+008C   1987           00253         BTFSC PORTC,3
+008D   2???           00254         GOTO LOOP4
+008E   2???           00255         CALL VALIDATE_ANSWER
+008F   1103           00256         BCF STATUS,Z
+0090   3001           00257         MOVLW .1
 Message[305]: Using default destination of 1 (file).
-009F   0AA7           00244         INCF CONT_WIN
-00A0   301F           00245         MOVLW B'00011111'
-00A1   0088           00246         MOVWF PORTD
-                      00247 
-00A2                  00248 CLEAR
-00A2   0188           00249         CLRF PORTD
-00A3   2???           00250         GOTO LOOP
-                      00251         
-                      00252 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-                      00253         
-                      00254 ;                   inicio de las Rutinas (call)
-                      00255         
-                      00256 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-                      00257         
-                      00258 ;               RUTINA DE ENCENDER LUCES DE PREGUNTAS Y ANIMALES
-                      00259                 ;USANDO 5 BITS PUERTO A y D 
-                      00260         
-                      00261 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                      00262         
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  7
+0091   02A6           00258         SUBWF CORRECTO
+0092   1D03           00259         BTFSS STATUS,Z
+0093   2???           00260         GOTO LOOP4
+0094   01A6           00261         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+0095   0AA7           00262         INCF CONT_WIN
+0096   300F           00263         MOVLW B'00001111'
+0097   0088           00264         MOVWF PORTD     
+0098                  00265 LOOP5
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-00A4   1003           00263 VERIFICA1           BCF STATUS,C
-00A5   0DB1           00264                     RLF PREGUNTA,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
-00A6   0831           00265                     MOVF PREGUNTA,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
-00A7   3C20           00266                     SUBLW 20H       ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
-00A8   1D03           00267                     BTFSS STATUS,Z
-00A9   2???           00268                     GOTO ENCENDER
-                      00269                    ; RETURN
-                      00270                     ;GOTO SIGUIENTE ANIMAL
-                      00271                     
-00AA   3001           00272                     MOVLW .1          ;inicializa las preguntas para proximo animal
-00AB   00B1           00273                     MOVWF PREGUNTA
-                      00274                     
-00AC   1003           00275 VERIFICA            BCF STATUS,C
-00AD   0DB0           00276                     RLF ANIMALES,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
-00AE   0830           00277                     MOVF ANIMALES,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
-00AF   3C20           00278                     SUBLW 20H       ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
-00B0   1D03           00279                     BTFSS STATUS,Z
-00B1   2???           00280                     GOTO ENCENDER
-00B2   2???           00281                     CALL INICIO   ; PROGRAMA RESET                  
-                      00282 
-00B3                  00283 ENCENDER        
-00B3   0831           00284                     MOVF PREGUNTA,W
-00B4   0088           00285                     MOVWF PORTD
-00B5   0830           00286                     MOVF ANIMALES,W 
-00B6   0085           00287                     MOVWF PORTA
-00B7   0008           00288                     RETURN
+                      00266         ; Fila 5 de Preguntas
+0098   1A07           00267         BTFSC PORTC,4
+0099   2???           00268         GOTO LOOP5
+009A   2???           00269         CALL VALIDATE_ANSWER
+009B   1103           00270         BCF STATUS,Z
+009C   3001           00271         MOVLW .1
+Message[305]: Using default destination of 1 (file).
+009D   02A6           00272         SUBWF CORRECTO
+009E   1D03           00273         BTFSS STATUS,Z
+009F   2???           00274         GOTO LOOP5
+00A0   01A6           00275         CLRF CORRECTO
+Message[305]: Using default destination of 1 (file).
+00A1   0AA7           00276         INCF CONT_WIN
+00A2   301F           00277         MOVLW B'00011111'
+00A3   0088           00278         MOVWF PORTD
+                      00279 
+00A4                  00280 CLEAR
+00A4   0188           00281         CLRF PORTD
+00A5   2???           00282         GOTO LOOP
+                      00283         
+                      00284 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+                      00285         
+                      00286 ;                   inicio de las Rutinas (call)
+                      00287         
+                      00288 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
                       00289         
-                      00290         
-                      00291         
+                      00290 ;               RUTINA DE ENCENDER LUCES DE PREGUNTAS Y ANIMALES
+                      00291                 ;USANDO 5 BITS PUERTO A y D 
                       00292         
-                      00293         
+                      00293 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                       00294         
-                      00295         
-                      00296 ;==============================================================================
-                      00297 ;                   VALIDA SI LA RESPUESTA ES CORRECTA
-                      00298 ;==============================================================================
-                      00299 
-00B8                  00300 VALIDATE_ANSWER 
-00B8   2???           00301         CALL READ_HEX
-00B9   00A5           00302         MOVWF RESPUESTA
-00BA   2???           00303         CALL Teclado_EsperaDejePulsar
-00BB   0827           00304         MOVF CONT_WIN,W
-00BC   2???           00305         CALL RESPUESTAS_1
+00A6   1003           00295 VERIFICA1           BCF STATUS,C
+00A7   0DB1           00296                     RLF PREGUNTA,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+00A8   0831           00297                     MOVF PREGUNTA,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+00A9   3C20           00298                     SUBLW 20H       ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+00AA   1D03           00299                     BTFSS STATUS,Z
+00AB   2???           00300                     GOTO ENCENDER
+                      00301                    ; RETURN
+                      00302                     ;GOTO SIGUIENTE ANIMAL
+                      00303                     
+00AC   3001           00304                     MOVLW .1          ;inicializa las preguntas para proximo animal
+00AD   00B1           00305                     MOVWF PREGUNTA
+                      00306                     
+00AE   1003           00307 VERIFICA            BCF STATUS,C
+00AF   0DB0           00308                     RLF ANIMALES,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+00B0   0830           00309                     MOVF ANIMALES,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+00B1   3C20           00310                     SUBLW 20H       ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+00B2   1D03           00311                     BTFSS STATUS,Z
+00B3   2???           00312                     GOTO ENCENDER
+00B4   2???           00313                     CALL INICIA   ; DEBERIA SER EL PROGRAMA A RESET                 
+                      00314 
+00B5                  00315 ENCENDER        
+00B5   0831           00316                     MOVF PREGUNTA,W
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00B6   0088           00317                     MOVWF PORTD
+00B7   0830           00318                     MOVF ANIMALES,W 
+00B8   0085           00319                     MOVWF PORTA
+00B9   0008           00320                     RETURN
+                      00321 
+                      00322 ;==============================================================================
+                      00323 ;                   VALIDA SI LA RESPUESTA ES CORRECTA
+                      00324 ;==============================================================================
+                      00325 
+00BA                  00326 VALIDATE_ANSWER 
+00BA   2???           00327         CALL READ_HEX
+00BB   00A5           00328         MOVWF RESPUESTA
+00BC   2???           00329         CALL Teclado_EsperaDejePulsar
+00BD   0827           00330         MOVF CONT_WIN,W
+00BE   2???           00331         CALL RESPUESTAS_1
 Message[305]: Using default destination of 1 (file).
-00BD   02A5           00306         SUBWF RESPUESTA
-00BE   1D03           00307         BTFSS STATUS,Z
-00BF   0008           00308         RETURN
-00C0   3001           00309         MOVLW .1
-00C1   00A6           00310         MOVWF CORRECTO
-00C2   0008           00311         RETURN
-                      00312 ;==============================================================================
-                      00313 ;LEER EL VALOR EN TECLADO 5x5
-                      00314 ;==============================================================================
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  8
+00BF   02A5           00332         SUBWF RESPUESTA
+00C0   1D03           00333         BTFSS STATUS,Z
+00C1   0008           00334         RETURN
+00C2   3001           00335         MOVLW .1
+00C3   00A6           00336         MOVWF CORRECTO
+00C4   0008           00337         RETURN
+                      00338 ;==============================================================================
+                      00339 ;LEER EL VALOR EN TECLADO 5x5
+                      00340 ;==============================================================================
+                      00341 
+00C5                  00342 READ_HEX
+00C5   2???           00343         CALL Teclado_LeeOrdenTecla
+00C6   1C03           00344         BTFSS STATUS,C
+00C7   2???           00345         GOTO READ_HEX_END
+00C8   2???           00346         CALL CONVERT_HEX
+00C9   1403           00347         BSF STATUS,C
+00CA                  00348 READ_HEX_END
+00CA   0008           00349         RETURN
+                      00350 ;===============================================================================
+                      00351 ;INICIALIZAR EL TECLADO 5x5
+                      00352 ;===============================================================================
+00CB                  00353 TecladoInicializa
+                      00354         BANK1
+00CB   1683               M         BSF STATUS,5
+00CC   1303               M         BCF STATUS,6
+00CD   3000           00355         MOVLW B'00000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00CE   0086           00356         MOVWF TRISB
+                      00357         
+00CF   301F           00358         MOVLW 0x1F
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00D0   0087           00359         MOVWF TRISC
+                      00360         
+                      00361         BANK0
+00D1   1283               M         BCF STATUS,5
+00D2   1303               M         BCF STATUS,6
+00D3   3019           00362         MOVLW .25
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00315 
-00C3                  00316 READ_HEX
-00C3   2???           00317         CALL Teclado_LeeOrdenTecla
-00C4   1C03           00318         BTFSS STATUS,C
-00C5   2???           00319         GOTO READ_HEX_END
-00C6   2???           00320         CALL CONVERT_HEX
-00C7   1403           00321         BSF STATUS,C
-00C8                  00322 READ_HEX_END
-00C8   0008           00323         RETURN
-                      00324 ;===============================================================================
-                      00325 ;INICIALIZAR EL TECLADO 5x5
-                      00326 ;===============================================================================
-00C9                  00327 TecladoInicializa
-                      00328         BANK1
-00C9   1683               M         BSF STATUS,5
-00CA   1303               M         BCF STATUS,6
-00CB   3000           00329         MOVLW B'00000000'
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-00CC   0086           00330         MOVWF TRISB
-                      00331         
-00CD   301F           00332         MOVLW 0x1F
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-00CE   0087           00333         MOVWF TRISC
-                      00334         
-                      00335         BANK0
-00CF   1283               M         BCF STATUS,5
-00D0   1303               M         BCF STATUS,6
-00D1   3019           00336         MOVLW .25
-00D2   00A4           00337         MOVWF LAST_TECLA
-00D3   0008           00338         RETURN
-                      00339 ;===============================================================================
-                      00340 ;                      ANTIREBOTE PARA LOS PULSADORES
-                      00341 ;===============================================================================
-00D4                  00342 Teclado_EsperaDejePulsar
-                      00343         BANK0
-00D4   1283               M         BCF STATUS,5
-00D5   1303               M         BCF STATUS,6
-00D6   301F           00344         MOVLW 0x1F
-00D7   0087           00345         MOVWF PORTC
-00D8                  00346 Teclado_SigueEsperando
-00D8   2???           00347         CALL RETARDO_20MS
-00D9   0807           00348         MOVF PORTC,W
-00DA   3C1F           00349         SUBLW 0x1F
-00DB   1D03           00350         BTFSS STATUS,Z
-00DC   2???           00351         GOTO Teclado_SigueEsperando
-00DD   0186           00352         CLRF PORTB
-00DE   0008           00353         RETURN
-                      00354 ;===============================================================================
-                      00355 ;               SCAN TECLAS PARA SELECION DE LA RESPUESTA
-                      00356 ;===============================================================================
-                      00357 
-00DF                  00358 Teclado_LeeOrdenTecla
-                      00359         BANK0
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE  9
+00D4   00A4           00363         MOVWF LAST_TECLA
+00D5   0008           00364         RETURN
+                      00365 ;===============================================================================
+                      00366 ;                      ANTIREBOTE PARA LOS PULSADORES
+                      00367 ;===============================================================================
+00D6                  00368 Teclado_EsperaDejePulsar
+                      00369         BANK0
+00D6   1283               M         BCF STATUS,5
+00D7   1303               M         BCF STATUS,6
+00D8   301F           00370         MOVLW 0x1F
+00D9   0087           00371         MOVWF PORTC
+00DA                  00372 Teclado_SigueEsperando
+00DA   2???           00373         CALL RETARDO_20MS
+00DB   0807           00374         MOVF PORTC,W
+00DC   3C1F           00375         SUBLW 0x1F
+00DD   1D03           00376         BTFSS STATUS,Z
+00DE   2???           00377         GOTO Teclado_SigueEsperando
+00DF   0186           00378         CLRF PORTB
+00E0   0008           00379         RETURN
+                      00380 ;===============================================================================
+                      00381 ;               SCAN TECLAS PARA SELECION DE LA RESPUESTA
+                      00382 ;===============================================================================
+                      00383 
+00E1                  00384 Teclado_LeeOrdenTecla
+                      00385         BANK0
+00E1   1283               M         BCF STATUS,5
+00E2   1303               M         BCF STATUS,6
+00E3   01A3           00386         CLRF TECLA
+00E4   30FE           00387         MOVLW B'11111110'
+00E5                  00388 CHECK_ROW
+00E5   0086           00389         MOVWF PORTB
+00E6                  00390 CHECK_COL_1
+00E6   1C07           00391         BTFSS PORTC,0
+00E7   2???           00392         GOTO SAVE_VALUE
+00E8   0AA3           00393         INCF TECLA,F
+00E9                  00394 CHECK_COL_2
+00E9   1C87           00395         BTFSS PORTC,1
+00EA   2???           00396         GOTO SAVE_VALUE
+00EB   0AA3           00397         INCF TECLA,F
+00EC                  00398 CHECK_COL_3
+00EC   1D07           00399         BTFSS PORTC,2
+00ED   2???           00400         GOTO SAVE_VALUE
+00EE   0AA3           00401         INCF TECLA,F
+00EF                  00402 CHECK_COL_4
+00EF   1D87           00403         BTFSS PORTC,3
+00F0   2???           00404         GOTO SAVE_VALUE
+00F1   0AA3           00405         INCF TECLA,F
+00F2                  00406 CHECK_COL_5
+00F2   1E07           00407         BTFSS PORTC,4
+00F3   2???           00408         GOTO SAVE_VALUE
+00F4   0AA3           00409         INCF TECLA,F    
+00F5                  00410 END_COL
+00F5   3024           00411         MOVLW LAST_TECLA
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-00DF   1283               M         BCF STATUS,5
-00E0   1303               M         BCF STATUS,6
-00E1   01A3           00360         CLRF TECLA
-00E2   30FE           00361         MOVLW B'11111110'
-00E3                  00362 CHECK_ROW
-00E3   0086           00363         MOVWF PORTB
-00E4                  00364 CHECK_COL_1
-00E4   1C07           00365         BTFSS PORTC,0
-00E5   2???           00366         GOTO SAVE_VALUE
-00E6   0AA3           00367         INCF TECLA,F
-00E7                  00368 CHECK_COL_2
-00E7   1C87           00369         BTFSS PORTC,1
-00E8   2???           00370         GOTO SAVE_VALUE
-00E9   0AA3           00371         INCF TECLA,F
-00EA                  00372 CHECK_COL_3
-00EA   1D07           00373         BTFSS PORTC,2
-00EB   2???           00374         GOTO SAVE_VALUE
-00EC   0AA3           00375         INCF TECLA,F
-00ED                  00376 CHECK_COL_4
-00ED   1D87           00377         BTFSS PORTC,3
-00EE   2???           00378         GOTO SAVE_VALUE
-00EF   0AA3           00379         INCF TECLA,F
-00F0                  00380 CHECK_COL_5
-00F0   1E07           00381         BTFSS PORTC,4
-00F1   2???           00382         GOTO SAVE_VALUE
-00F2   0AA3           00383         INCF TECLA,F    
-00F3                  00384 END_COL
-00F3   3024           00385         MOVLW LAST_TECLA
-00F4   0223           00386         SUBWF TECLA,W
-00F5   1803           00387         BTFSC STATUS,C
-00F6   2???           00388         GOTO TECLA_NO_PULSE
-00F7   1403           00389         BSF STATUS,C
-00F8   0D06           00390         RLF PORTB,W
-00F9   2???           00391         GOTO CHECK_ROW
-                      00392         
-00FA                  00393 TECLA_NO_PULSE
-00FA   1003           00394         BCF STATUS,C
-00FB   2???           00395         GOTO KEYBOARD_END
-00FC                  00396 SAVE_VALUE
-00FC   0823           00397         MOVF TECLA,W
-00FD   1403           00398         BSF STATUS,C
-00FE                  00399 KEYBOARD_END
-00FE   0008           00400         RETURN
-                      00401                 
-                      00402         
-20F4 3EFF             00403         END
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 10
+00F6   0223           00412         SUBWF TECLA,W
+00F7   1803           00413         BTFSC STATUS,C
+00F8   2???           00414         GOTO TECLA_NO_PULSE
+00F9   1403           00415         BSF STATUS,C
+00FA   0D06           00416         RLF PORTB,W
+00FB   2???           00417         GOTO CHECK_ROW
+                      00418         
+00FC                  00419 TECLA_NO_PULSE
+00FC   1003           00420         BCF STATUS,C
+00FD   2???           00421         GOTO KEYBOARD_END
+00FE                  00422 SAVE_VALUE
+00FE   0823           00423         MOVF TECLA,W
+00FF   1403           00424         BSF STATUS,C
+0100                  00425 KEYBOARD_END
+0100   0008           00426         RETURN
+                      00427                 
+                      00428         
+20F4 3EFF             00429         END
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 11
 
 
 SYMBOL TABLE
@@ -581,7 +612,7 @@ BRG15                             00000007
 BRG16                             00000003
 BRG2                              00000002
 BRG3                              00000003
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 11
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 12
 
 
 SYMBOL TABLE
@@ -640,7 +671,7 @@ CCPR1                             00000015
 CCPR1H                            00000016
 CCPR1L                            00000015
 CCPR2                             0000001B
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 12
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 13
 
 
 SYMBOL TABLE
@@ -648,24 +679,25 @@ SYMBOL TABLE
 
 CCPR2H                            0000001C
 CCPR2L                            0000001B
-CHECK_COL_1                       000000E4
-CHECK_COL_2                       000000E7
-CHECK_COL_3                       000000EA
-CHECK_COL_4                       000000ED
-CHECK_COL_5                       000000F0
-CHECK_ROW                         000000E3
+CHECK_COL_1                       000000E6
+CHECK_COL_2                       000000E9
+CHECK_COL_3                       000000EC
+CHECK_COL_4                       000000EF
+CHECK_COL_5                       000000F2
+CHECK_ROW                         000000E5
 CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
 CKE                               00000006
 CKP                               00000004
-CLEAR                             000000A2
+CLEAR                             000000A4
 CM1CON0                           00000107
 CM2CON0                           00000108
 CM2CON1                           00000109
 CONTA_1                           00000021
 CONTA_2                           00000020
+CONTPRGTA                         00000033
 CONT_WIN                          00000027
 CONVERT_HEX                       00000004
 CORRECTO                          00000026
@@ -697,14 +729,14 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-ENCENDER                          000000B3
-END_COL                           000000F3
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 13
+ENCENDER                          000000B5
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+END_COL                           000000F5
 END_CONVERT_HEX                   0000001E
 END_RESPUESTAS_1                  00000038
 F                                 00000001
@@ -722,7 +754,7 @@ I2C_READ                          00000002
 I2C_START                         00000003
 I2C_STOP                          00000004
 INDF                              00000000
-INICIA                            0000005F
+INICIA                            0000005E
 INICIO                            00000044
 INTCON                            0000000B
 INTE                              00000004
@@ -741,13 +773,13 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
-KEYBOARD_END                      000000FE
+KEYBOARD_END                      00000100
 LAST_TECLA                        00000024
-LOOP                              00000066
-LOOP2                             00000072
-LOOP3                             0000007E
-LOOP4                             0000008A
-LOOP5                             00000096
+LOOP                              00000068
+LOOP2                             00000074
+LOOP3                             00000080
+LOOP4                             0000008C
+LOOP5                             00000098
 LTS                               00000001
 MC1OUT                            00000007
 MC2OUT                            00000006
@@ -757,13 +789,13 @@ MSK1                              00000001
 MSK2                              00000002
 MSK3                              00000003
 MSK4                              00000004
-MSK5                              00000005
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 14
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 15
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+MSK5                              00000005
 MSK6                              00000006
 MSK7                              00000007
 NOT_A                             00000005
@@ -813,16 +845,17 @@ PORTD                             00000008
 PORTE                             00000009
 PR2                               00000092
 PREGUNTA                          00000031
+PROXIMO                           00000066
 PRSEN                             00000007
 PS0                               00000000
-PS1                               00000001
-PS2                               00000002
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 15
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 16
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PS1                               00000001
+PS2                               00000002
 PSA                               00000003
 PSSAC0                            00000002
 PSSAC1                            00000003
@@ -874,21 +907,21 @@ RD1                               00000001
 RD2                               00000002
 RD3                               00000003
 RD4                               00000004
-RD5                               00000005
-RD6                               00000006
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 16
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 17
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RD5                               00000005
+RD6                               00000006
 RD7                               00000007
 RE0                               00000000
 RE1                               00000001
 RE2                               00000002
 RE3                               00000003
-READ_HEX                          000000C3
-READ_HEX_END                      000000C8
+READ_HEX                          000000C5
+READ_HEX_END                      000000CA
 READ_WRITE                        00000002
 RESPUESTA                         00000025
 RESPUESTAS_1                      0000001E
@@ -901,13 +934,13 @@ RX9D                              00000000
 R_NOT_W                           00000002
 R_W                               00000002
 S                                 00000003
-SAVE_VALUE                        000000FC
+SAVE_VALUE                        000000FE
 SBOREN                            00000004
 SCKP                              00000004
 SCS                               00000000
 SEN                               00000000
 SENDB                             00000003
-SISTPREG                          00000064
+SISTPREG                          00000063
 SMP                               00000007
 SPBRG                             00000099
 SPBRGH                            0000009A
@@ -933,14 +966,14 @@ SSPSTAT                           00000094
 STATUS                            00000003
 STRA                              00000000
 STRB                              00000001
-STRC                              00000002
-STRD                              00000003
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 17
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 18
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+STRC                              00000002
+STRD                              00000003
 STRSYNC                           00000004
 SWDTEN                            00000000
 SYNC                              00000004
@@ -961,7 +994,7 @@ T2CKPS0                           00000000
 T2CKPS1                           00000001
 T2CON                             00000012
 TECLA                             00000023
-TECLA_NO_PULSE                    000000FA
+TECLA_NO_PULSE                    000000FC
 TEMP                              00000032
 TMR0                              00000001
 TMR0IE                            00000005
@@ -992,14 +1025,14 @@ TRISA5                            00000005
 TRISA6                            00000006
 TRISA7                            00000007
 TRISB                             00000086
-TRISB0                            00000000
-TRISB1                            00000001
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 18
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 19
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISB0                            00000000
+TRISB1                            00000001
 TRISB2                            00000002
 TRISB3                            00000003
 TRISB4                            00000004
@@ -1044,25 +1077,25 @@ TXIE                              00000004
 TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
-TecladoInicializa                 000000C9
-Teclado_EsperaDejePulsar          000000D4
-Teclado_LeeOrdenTecla             000000DF
-Teclado_SigueEsperando            000000D8
+TecladoInicializa                 000000CB
+Teclado_EsperaDejePulsar          000000D6
+Teclado_LeeOrdenTecla             000000E1
+Teclado_SigueEsperando            000000DA
 UA                                00000001
 ULPWUE                            00000005
 ULPWUIE                           00000002
-ULPWUIF                           00000002
-VALIDATE_ANSWER                   000000B8
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 19
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 20
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+ULPWUIF                           00000002
+VALIDATE_ANSWER                   000000BA
 VCFG0                             00000004
 VCFG1                             00000005
-VERIFICA                          000000AC
-VERIFICA1                         000000A4
+VERIFICA                          000000AE
+VERIFICA1                         000000A6
 VR0                               00000000
 VR1                               00000001
 VR2                               00000002
@@ -1110,14 +1143,14 @@ _BOR_SBODEN                       00003DFF
 _CONFIG1                          00002007
 _CONFIG2                          00002008
 _CPD_OFF                          00003FFF
-_CPD_ON                           00003F7F
-_CP_OFF                           00003FFF
-MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  22:30:39         PAGE 20
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 21
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_CPD_ON                           00003F7F
+_CP_OFF                           00003FFF
 _CP_ON                            00003FBF
 _DEBUG_OFF                        00003FFF
 _DEBUG_ON                         00001FFF
@@ -1166,8 +1199,14 @@ _WRT_OFF                          00003FFF
 _XT_OSC                           00003FF9
 __16F887                          00000001
 
+MPASM 5.81  /HOME/MIPC/MPLABXPROJECTS/GITWIL   10-24-2018  23:24:31         PAGE 22
+
+
+
+
+
 Errors   :     0
-Warnings :     1 reported,     0 suppressed
+Warnings :     0 reported,     0 suppressed
 Messages :    18 reported,     0 suppressed
 
 

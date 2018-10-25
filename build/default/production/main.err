@@ -1,19 +1,18 @@
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 121 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 122 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 123 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Warning[207] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 173 : Found label after column 1. (LOOP)
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 180 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 186 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 196 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 200 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 211 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 215 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 226 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 230 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 240 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 244 : Using default destination of 1 (file).
-Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 306 : Using default destination of 1 (file).
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 330 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 333 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 63 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 64 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 134 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 135 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 136 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 208 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 214 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 228 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 232 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 243 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 247 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 258 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 262 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 272 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 276 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 332 : Using default destination of 1 (file).
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 356 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 359 : Register in operand not in bank 0.  Ensure that bank bits are correct.
