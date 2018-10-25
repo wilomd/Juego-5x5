@@ -51,8 +51,8 @@ BANK3	MACRO
 	
 ClSPort MACRO
 	BANK0
-	CLRF PORTB
 	CLRF PORTC
+	CLRF PORTB
 	CLRF PORTA
 	CLRF PORTD
 	CLRF PORTE
@@ -79,7 +79,7 @@ PREGUNTA    EQU 0X31
 TEMP	    EQU 0X32
 CONTPRGTA   EQU 0X33	    
 PUERTOD	    EQU	0X34	   
-	    
+CONTAFIL    EQU	0X35	    
  
 	
 	ORG H'01'
@@ -120,21 +120,24 @@ RETARDO_20MS
 	RETURN 
 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	
-;       		inicia el programa	
+;       		inicia parametros para el programa	
 	
 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
 
 INICIO
 	
 	DigPort			;inicializa los puertos en digital  
-	CALL TecladoInicializa   ;PUERTO B SALIDA / PUERTO C ENTRADA OJO PULL UP
-	
-	
+
 	BANK1
 	MOVLW 01FH	     
 	MOVWF TRISE	    ;PUERTO E ENTRADA para Pulsador de Inicio Programa
+	MOVWF TRISB	    ;PUERTO B ENTRADA PARA EL TECLADO
+	CLRF TRISC	    ;PUERTO C SALIDA 
+
 	CLRF TRISA	    ;PUERTO A SALIDA BOMBILLOS ANIMAL
 	CLRF TRISD	    ;PUERTO D SALIDA BOMBILLOS PREGUNTA
+	
+; RECOMENDABLE EN EL TECLADO PUERTO B ENTRADA PARA USAR PULL UP
 	
 	BANK0
 	
@@ -144,10 +147,15 @@ INICIO
 	MOVWF ANIMALES
 	MOVWF PREGUNTA
 	MOVWF PUERTOD
+	
 	MOVLW .25
 	MOVWF CONTPRGTA
+	MOVWF LAST_TECLA
+	
+	MOVLW 00H
+	MOVWF CONTAFIL
 
-	ClSPort
+	ClSPort	    ; MACRO DE INICIALIZAR PUERTOS
 	
 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
 	
@@ -158,6 +166,7 @@ INICIA
 	CALL RETARDO_20MS   ;USAR INT RB CAMBIO ESTADO PARA QUE SALTE AL INICIO?
 	BTFSS PORTE,0	    ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
 	GOTO INICIA
+	
 ; cambiar esto con uno de los botones de Puerto B para trabajar con la int
 ; de cambio de estado y dejar el PIC en Sleep 	
 	
@@ -197,12 +206,13 @@ PROXIMO
 	
 ;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	
-	;  rutinas de ?????????
-	 
+	;mejorar estas  rutinas de preguntas en las filas
+	; por esto es mejor usar INT de cambio de estado en puerto B
+	
 ;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
 LOOP	
 	; Fila 1 de Preguntas
-	BTFSC PORTC,0    ; mimo valor de pregunta
+	BTFSC PORTB,0    ; mismo valor de pregunta
 	GOTO LOOP
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -222,7 +232,7 @@ LOOP
 	
 LOOP2
 	; Fila 2 de Preguntas
-	BTFSC PORTC,1
+	BTFSC PORTB,1
 	GOTO LOOP2
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -237,7 +247,7 @@ LOOP2
 	
 LOOP3
 	; Fila 3 de Preguntas
-	BTFSC PORTC,2
+	BTFSC PORTB,2
 	GOTO LOOP3
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -252,7 +262,7 @@ LOOP3
 
 LOOP4
 	; Fila 4 de Preguntas
-	BTFSC PORTC,3
+	BTFSC PORTB,3
 	GOTO LOOP4
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -266,7 +276,7 @@ LOOP4
 	MOVWF PORTD	
 LOOP5
 	; Fila 5 de Preguntas
-	BTFSC PORTC,4
+	BTFSC PORTB,4
 	GOTO LOOP5
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -350,34 +360,20 @@ READ_HEX
 READ_HEX_END
 	RETURN
 ;===============================================================================
-;INICIALIZAR EL TECLADO 5x5
-;===============================================================================
-TecladoInicializa
-	BANK1
-	MOVLW B'00000000'
-	MOVWF TRISB
-	
-	MOVLW 0x1F
-	MOVWF TRISC
-	
-	BANK0
-	MOVLW .25
-	MOVWF LAST_TECLA
-	RETURN
-;===============================================================================
 ;                      ANTIREBOTE PARA LOS PULSADORES
 ;===============================================================================
 Teclado_EsperaDejePulsar
 	BANK0
 	MOVLW 0x1F
-	MOVWF PORTC
+	MOVWF PORTB
+	
 Teclado_SigueEsperando
 	CALL RETARDO_20MS
-	MOVF PORTC,W
+	MOVF PORTB,W
 	SUBLW 0x1F
 	BTFSS STATUS,Z
 	GOTO Teclado_SigueEsperando
-	CLRF PORTB
+	CLRF PORTC
 	RETURN
 ;===============================================================================
 ;               SCAN TECLAS PARA SELECION DE LA RESPUESTA
@@ -388,25 +384,25 @@ Teclado_LeeOrdenTecla
 	CLRF TECLA
 	MOVLW B'11111110'
 CHECK_ROW
-	MOVWF PORTB
+	MOVWF PORTC
 CHECK_COL_1
-	BTFSS PORTC,0
+	BTFSS PORTB,0
 	GOTO SAVE_VALUE
 	INCF TECLA,F
 CHECK_COL_2
-	BTFSS PORTC,1
+	BTFSS PORTB,1
 	GOTO SAVE_VALUE
 	INCF TECLA,F
 CHECK_COL_3
-	BTFSS PORTC,2
+	BTFSS PORTB,2
 	GOTO SAVE_VALUE
 	INCF TECLA,F
 CHECK_COL_4
-	BTFSS PORTC,3
+	BTFSS PORTB,3
 	GOTO SAVE_VALUE
 	INCF TECLA,F
 CHECK_COL_5
-	BTFSS PORTC,4
+	BTFSS PORTB,4
 	GOTO SAVE_VALUE
 	INCF TECLA,F	
 END_COL
@@ -415,7 +411,7 @@ END_COL
 	BTFSC STATUS,C
 	GOTO TECLA_NO_PULSE
 	BSF STATUS,C
-	RLF PORTB,W
+	RLF PORTC,W
 	GOTO CHECK_ROW
 	
 TECLA_NO_PULSE
@@ -430,7 +426,17 @@ KEYBOARD_END
 	
 	END
 
-GUSANOPANT
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+	
+; rutinas a cambiar o mejorar antes de subirlas al programa general
+
+	
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	GUSANOPANT
+	
+	; rutina de encendido de los bombillos para llamar la atencion del
+	; publico
 	
 	
 encendolinea
@@ -447,35 +453,44 @@ encendolinea
 	
 LOOP	
 	; Fila 1 de Preguntas
-	BTFSC PORTC,0    ; mimo valor de pregunta
-	GOTO LOOP
+
+	
+	BTFSC   PORTB,0    ; mimo valor de pregunta
+	GOTO    LOOP
+	
+	
 ; hacer un llamado aqui ? y todo es la rutina ?
+teclafila
 	
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
 	MOVLW .1
 	SUBWF CORRECTO
-	
 	BTFSS STATUS,Z
-	GOTO LOOP	;falta tono de error
+
+	GOTO LOOP	;retorna si no es la tecla / falta tono de error
 	
 	CLRF CORRECTO
 	INCF CONT_WIN    ;falta tono de bueno
-	CALL SIGFILA
-	MOVF PUERTOD,W
+	GOTO SIGFILA
+RETORNA	MOVF PUERTOD,W
 	MOVWF PORTD
+
 	GOTO LOOP
 
 	
-SIGFILA     BSF	STATUS,C
-	    RLF	PUERTOD,F   ; ROTA A LA IZQUIERDA BIT  
-	    MOVF PUERTOD,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
-	    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO 
-	    BTFSS STATUS,Z
-	    RETURN 
-CLEAR
-	    CLRF PORTD
-	    GOTO LOOP
+
+SIGFILA BSF	STATUS,C
+	RLF	PUERTOD,F   ; ROTA A LA IZQUIERDA BIT  
+	MOVF PUERTOD,W	    ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+	SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO 
+	BTFSS STATUS,Z
+	GOTO RETORNA 
+CLEAR	CLRF PORTD
+	GOTO LOOP	    ;inicia las preguntas nueva mente
+	
 	
 ; la  rutina terminaria aqui ojo
+	
+;problemas de no cerrar el ciclo del llamado ojo
 	    
