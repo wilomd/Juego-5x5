@@ -7,7 +7,8 @@
 ;	E   e	    21, 22, 23, 24, 25
 	
 	
-; 1ra columna Animales solo bombillos
+; 1ra columna Animales solo bombillos 
+	
 ; 2da Columna Preguntas solo bombillos
 	
 ; 25 bombillos y 25 pulsadores panel de Respuesta
@@ -198,8 +199,8 @@ PROXIMO
 	 
 ;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
 LOOP	
-	; Fila 1
-	BTFSC PORTC,0
+	; Fila 1 de Preguntas
+	BTFSC PORTC,0    ; mimo valor de pregunta
 	GOTO LOOP
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
@@ -207,14 +208,18 @@ LOOP
 	SUBWF CORRECTO
 	
 	BTFSS STATUS,Z
-	GOTO LOOP
+	GOTO LOOP	;falta tono de error
 	
 	CLRF CORRECTO
-	INCF CONT_WIN
+	INCF CONT_WIN    ;falta tono de bueno
 	MOVLW B'00000001'
 	MOVWF PORTD
+	
+	;estas 5 preguntas son muy parecidas hacer una sola generica 
+	; que funcione igual las 5 veces del  programa
+	
 LOOP2
-	; Fila 2
+	; Fila 2 de Preguntas
 	BTFSC PORTC,1
 	GOTO LOOP2
 	CALL VALIDATE_ANSWER
@@ -229,7 +234,7 @@ LOOP2
 	MOVWF PORTD
 	
 LOOP3
-	; Fila 3
+	; Fila 3 de Preguntas
 	BTFSC PORTC,2
 	GOTO LOOP3
 	CALL VALIDATE_ANSWER
@@ -244,7 +249,7 @@ LOOP3
 	MOVWF PORTD
 
 LOOP4
-	; Fila 4
+	; Fila 4 de Preguntas
 	BTFSC PORTC,3
 	GOTO LOOP4
 	CALL VALIDATE_ANSWER
@@ -258,7 +263,7 @@ LOOP4
 	MOVLW B'00001111'
 	MOVWF PORTD	
 LOOP5
-	; Fila 5
+	; Fila 5 de Preguntas
 	BTFSC PORTC,4
 	GOTO LOOP5
 	CALL VALIDATE_ANSWER
@@ -429,6 +434,92 @@ GUSANOPANT
 encendolinea
 	
 	
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	
+	;  rutinas de ?????????
+	 
+;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
+LOOP	
+	; Fila 1 de Preguntas
+	BTFSC PORTC,0    ; mimo valor de pregunta
+	GOTO LOOP
+	CALL VALIDATE_ANSWER
+	BCF STATUS,Z
+	MOVLW .1
+	SUBWF CORRECTO
+	
+	BTFSS STATUS,Z
+	GOTO LOOP	;falta tono de error
+	
+	CLRF CORRECTO
+	INCF CONT_WIN    ;falta tono de bueno
+	MOVLW B'00000001'
+	MOVWF PORTD
+	
+	;estas 5 preguntas son muy parecidas hacer una sola generica 
+	; que funcione igual las 5 veces del  programa
+	
+LOOP2
+	; Fila 2 de Preguntas
+	BTFSC PORTC,1
+	GOTO LOOP2
+	CALL VALIDATE_ANSWER
+	BCF STATUS,Z
+	MOVLW .1
+	SUBWF CORRECTO
+	BTFSS STATUS,Z
+	GOTO LOOP2
+	CLRF CORRECTO
+	INCF CONT_WIN
+	MOVLW B'00000011'
+	MOVWF PORTD
+	
+LOOP3
+	; Fila 3 de Preguntas
+	BTFSC PORTC,2
+	GOTO LOOP3
+	CALL VALIDATE_ANSWER
+	BCF STATUS,Z
+	MOVLW .1
+	SUBWF CORRECTO
+	BTFSS STATUS,Z
+	GOTO LOOP3
+	CLRF CORRECTO
+	INCF CONT_WIN
+	MOVLW B'00000111'
+	MOVWF PORTD
+
+LOOP4
+	; Fila 4 de Preguntas
+	BTFSC PORTC,3
+	GOTO LOOP4
+	CALL VALIDATE_ANSWER
+	BCF STATUS,Z
+	MOVLW .1
+	SUBWF CORRECTO
+	BTFSS STATUS,Z
+	GOTO LOOP4
+	CLRF CORRECTO
+	INCF CONT_WIN
+	MOVLW B'00001111'
+	MOVWF PORTD	
+LOOP5
+	; Fila 5 de Preguntas
+	BTFSC PORTC,4
+	GOTO LOOP5
+	CALL VALIDATE_ANSWER
+	BCF STATUS,Z
+	MOVLW .1
+	SUBWF CORRECTO
+	BTFSS STATUS,Z
+	GOTO LOOP5
+	CLRF CORRECTO
+	INCF CONT_WIN
+	MOVLW B'00011111'
+	MOVWF PORTD
+
+CLEAR
+	CLRF PORTD
+	GOTO LOOP	
 	
 	
