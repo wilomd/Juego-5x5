@@ -53,8 +53,10 @@ LAST_TECLA  EQU 0x24
 RESPUESTA   EQU 0x25
 CORRECTO    EQU 0x26
 CONT_WIN    EQU 0x27
-ANIMALES    EQU 0X28
-PREGUNTA    EQU 0X29    
+    
+ANIMALES    EQU 0X30
+PREGUNTA    EQU 0X31
+TEMP	    EQU 0X32
  
 	
 	ORG H'01'
@@ -65,13 +67,13 @@ PREGUNTA    EQU 0X29
 	
 CONVERT_HEX
 	ADDWF PCL,F
-	DT .1,  .2, .3, .4, .5
-	DT .6,  .7, .8, .9,.10
-	DT .11,.12,.13,.14,.15
-	DT .16,.17,.18,.19,.20
-	DT .21,.22,.23,.24,.25
+	DT  .1,  .2, .3, .4, .5
+	DT  .6,  .7, .8, .9,.10
+	DT .11, .12,.13,.14,.15
+	DT .16, .17,.18,.19,.20
+	DT .21, .22,.23,.24,.25
 END_CONVERT_HEX
-	
+	 
 RESPUESTAS_1 
 	ADDWF PCL,F
 	DT .1,.7,.23,.14,.25
@@ -93,8 +95,21 @@ RETARDO_20MS
 	DECFSZ CONTA_2,F
 	GOTO $-.6
 	RETURN 
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	
+;       		inicia el programa	
+	
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
+
+
 INICIO
+	
+	
+	
+	
+	MOVLW .1
+	MOVWF ANIMALES
+	MOVWF PREGUNTA
 	
 	DigPort			;inicializa los puertos en digital  
 	
@@ -116,62 +131,43 @@ INICIO
 	
 	ClSPort
 	
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
 	
 	
 INICIA		
-	;CALL GUSANOPANT     ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
+    ;CALL GUSANOPANT     ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
 	
 	CALL RETARDO_20MS   ;USAR INT PARA QUE SALTE AL INICIO?
 	BTFSS PORTE,0	    ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
 	GOTO INICIA
-	
+; cambiar esto con uno de los botones de Puerto B para trabajar con la int
+; de cambio de estado y dejar el PIC en Sleep 	
 	
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
-;		    ANIMAL1 PREGUNTAS	
+;			    ANIMAL1 PREGUNTAS	
 
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
 	BSF PORTA,0       ;PRIMER ANIMAL
 	BSF PORTD,0	  ;PRIMERA PREGUNTA ACTIVA
 	
-	;CALL ESPERAR POR TECLA CORRECTA
+SISTPREG
+	;CALL ESPERAR POR TECLA CORRECTA DE LA PREGUNTA X
 	;CALL TONO DE CORRECTO
 	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-
-	BCF PORTD,0	    ;APAGA PRIMERA PREGUNTA
-	BSF PORTD,1	    ;SEGUNDA PREGUNTA ACTIVA
+	;DECREMENTA CONTADOR PARA LAS 25 PREGUNTAS
 	
-	;CALL ESPERAR POR TECLA CORRECTA
-	;CALL TONO DE CORRECTO
-	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
+	CALL VERIFICA1	;SIGUIENTE PREGUNTA Y/O ANIMAL
+			;PREGUNTA SI ES EL FINAL DEL CONTADOR DE LAS PREGUNTAS EN CASO 
+			; DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
+	GOTO SISTPREG
 	
-	BCF PORTD,1	    ;APAGA SEGUNDA PREGUNTA
-	BSF PORTD,2	    ;TERCERA PREGUNTA ACTIVA
+	;COMPLETAR LAS 25 PREGUNTAS
 	
-	;CALL ESPERAR POR TECLA CORRECTA
-	;CALL TONO DE CORRECTO
-	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-	
-
-	BCF PORTD,2	    ;APAGA TERCERA PREGUNTA
-	BSF PORTD,3	    ;CUARTA PREGUNTA ACTIVA
-	
-	;CALL ESPERAR POR TECLA CORRECTA
-	;CALL TONO DE CORRECTO
-	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-	
-	BCF PORTD,3	    ;APAGA CUARTA PREGUNTA
-	BSF PORTD,4	    ;QUINTA PREGUNTA ACTIVA
-	
-	;CALL ESPERAR POR TECLA CORRECTA
-	;CALL TONO DE CORRECTO
-	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-	
-	BCF PORTD,4
-	BCF PORTA,0
-
 ; ES EL MISMO SISTEMA SE PUEDE HACER CON ROTACION DE BITS PARA TODAS LAS PREGUNTAS
+
+	
 	
 	
 	LOOP	
@@ -258,6 +254,45 @@ CLEAR
 ;		    inicio de las Rutinas (call)
 	
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	
+;		RUTINA DE ENCENDER LUCES DE PREGUNTAS Y ANIMALES
+		;USANDO 5 BITS PUERTO A y D 
+	
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+VERIFICA1	    BCF	STATUS,C
+		    RLF	PREGUNTA,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+		    MOVF PREGUNTA,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+		    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+		    BTFSS STATUS,Z
+		    GOTO ENCENDER
+		   ; RETURN
+		    ;GOTO SIGUIENTE ANIMAL
+		    
+		    MOVLW .1          ;inicializa las preguntas para proximo animal
+		    MOVWF PREGUNTA
+		    
+VERIFICA	    BCF	STATUS,C
+		    RLF	ANIMALES,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+		    MOVF ANIMALES,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+		    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+		    BTFSS STATUS,Z
+		    GOTO ENCENDER
+		    CALL INICIO   ; PROGRAMA RESET 		    
+
+ENCENDER	
+		    MOVF PREGUNTA,W
+		    MOVWF PORTD
+		    MOVF ANIMALES,W 
+		    MOVWF PORTA
+		    RETURN
+	
+	
+	
+	
+	
+	
+	
 ;==============================================================================
 ;                   VALIDA SI LA RESPUESTA ES CORRECTA
 ;==============================================================================
@@ -366,3 +401,22 @@ KEYBOARD_END
 		
 	
 	END
+	
+	
+;==========================================================================	
+; Programa de rotacion de bits para animales o preguntas
+	
+ANIMALES    EQU 0X28
+PREGUNTA    EQU 0X29    
+
+
+		    
+
+		    
+
+		    
+		    
+	
+	BSF PORTA,0       ;PRIMER ANIMAL
+	BSF PORTD,0	  ;PRIMERA PREGUNTA ACTIVA	
+;==========================================================================	
