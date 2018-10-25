@@ -1,3 +1,22 @@
+; FORMATO DEL PANEL
+	
+;	A   a	     1,  2,  3,  4,  5	
+;	B   b	     6,  7,  8,  9, 10
+;	C   c	    11, 12, 13, 14, 15
+;	D   d	    16, 17, 18, 19, 20
+;	E   e	    21, 22, 23, 24, 25
+	
+	
+; 1ra columna Animales solo bombillos
+; 2da Columna Preguntas solo bombillos
+	
+; 25 bombillos y 25 pulsadores panel de Respuesta
+
+; 1 Pulsador de inicio del Sistema	
+
+; 1 Salida de Audio para Tono (acierto o respuesta Errada
+	    
+	
 	List p=16f887
 	#include <p16f887.inc>
 	
@@ -57,6 +76,8 @@ CONT_WIN    EQU 0x27
 ANIMALES    EQU 0X30
 PREGUNTA    EQU 0X31
 TEMP	    EQU 0X32
+CONTPRGTA   EQU 0X33	    
+	    
  
 	
 	ORG H'01'
@@ -101,34 +122,28 @@ RETARDO_20MS
 	
 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
 
-
 INICIO
 	
-	
-	
-	
-	MOVLW .1
-	MOVWF ANIMALES
-	MOVWF PREGUNTA
-	
 	DigPort			;inicializa los puertos en digital  
-	
 	CALL TecladoInicializa   ;PUERTO B SALIDA / PUERTO C ENTRADA OJO PULL UP
 	
 	
 	BANK1
 	MOVLW 01FH	     
-	MOVWF TRISE	    ;PUERTO E ENTRADA
+	MOVWF TRISE	    ;PUERTO E ENTRADA para Pulsador de Inicio Programa
 	CLRF TRISA	    ;PUERTO A SALIDA BOMBILLOS ANIMAL
 	CLRF TRISD	    ;PUERTO D SALIDA BOMBILLOS PREGUNTA
 	
 	BANK0
 	
 	CLRF CONT_WIN
-	MOVLW 01H
-	MOVWF ANIMALES 
-	MOVWF PREGUNTA
 	
+	MOVLW .1
+	MOVWF ANIMALES
+	MOVWF PREGUNTA
+	MOVLW .25
+	MOVWF CONTPRGTA
+
 	ClSPort
 	
 ;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
@@ -137,7 +152,7 @@ INICIO
 INICIA		
     ;CALL GUSANOPANT     ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
 	
-	CALL RETARDO_20MS   ;USAR INT PARA QUE SALTE AL INICIO?
+	CALL RETARDO_20MS   ;USAR INT RB CAMBIO ESTADO PARA QUE SALTE AL INICIO?
 	BTFSS PORTE,0	    ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
 	GOTO INICIA
 ; cambiar esto con uno de los botones de Puerto B para trabajar con la int
@@ -145,7 +160,7 @@ INICIA
 	
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
-;			    ANIMAL1 PREGUNTAS	
+;			    ANIMALES Y PREGUNTAS	
 
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
@@ -154,10 +169,19 @@ INICIA
 	
 SISTPREG
 	;CALL ESPERAR POR TECLA CORRECTA DE LA PREGUNTA X
-	;CALL TONO DE CORRECTO
-	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA 
-	;DECREMENTA CONTADOR PARA LAS 25 PREGUNTAS
+	;TONO DE CORRECTO O INCORRECTO ESTA EN LA ESPERA DE LA TECLA 
 	
+	;TABLA DE 25 DATOS CON EL VALOR DE LA RESPUESTA CORRECTA
+	;PARA FUNCIONAR CON EN CONTADOR DE PREGUNTAS
+	
+	;LIMPIAR EL WD PARA QUE NO REINICIE EL PROGRAMA
+	
+	
+	DECFSZ CONTPRGTA,F  ;DECREMENTA  CONTADOR PARA LAS 25 PREGUNTAS
+	GOTO PROXIMO
+	GOTO INICIA
+	
+PROXIMO
 	CALL VERIFICA1	;SIGUIENTE PREGUNTA Y/O ANIMAL
 			;PREGUNTA SI ES EL FINAL DEL CONTADOR DE LAS PREGUNTAS EN CASO 
 			; DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
@@ -165,12 +189,15 @@ SISTPREG
 	
 	;COMPLETAR LAS 25 PREGUNTAS
 	
-; ES EL MISMO SISTEMA SE PUEDE HACER CON ROTACION DE BITS PARA TODAS LAS PREGUNTAS
 
 	
 	
+;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	
-	LOOP	
+	;  rutinas de ?????????
+	 
+;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
+LOOP	
 	; Fila 1
 	BTFSC PORTC,0
 	GOTO LOOP
@@ -278,7 +305,7 @@ VERIFICA	    BCF	STATUS,C
 		    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
 		    BTFSS STATUS,Z
 		    GOTO ENCENDER
-		    CALL INICIO   ; PROGRAMA RESET 		    
+		    CALL INICIA   ; DEBERIA SER EL PROGRAMA A RESET 		    
 
 ENCENDER	
 		    MOVF PREGUNTA,W
@@ -286,13 +313,7 @@ ENCENDER
 		    MOVF ANIMALES,W 
 		    MOVWF PORTA
 		    RETURN
-	
-	
-	
-	
-	
-	
-	
+
 ;==============================================================================
 ;                   VALIDA SI LA RESPUESTA ES CORRECTA
 ;==============================================================================
@@ -401,22 +422,13 @@ KEYBOARD_END
 		
 	
 	END
+
+GUSANOPANT
 	
 	
-;==========================================================================	
-; Programa de rotacion de bits para animales o preguntas
+encendolinea
 	
-ANIMALES    EQU 0X28
-PREGUNTA    EQU 0X29    
-
-
-		    
-
-		    
-
-		    
-		    
 	
-	BSF PORTA,0       ;PRIMER ANIMAL
-	BSF PORTD,0	  ;PRIMERA PREGUNTA ACTIVA	
-;==========================================================================	
+	
+	
+	
