@@ -1,16 +1,19 @@
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 71 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 91 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 95 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 105 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 109 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 120 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 124 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 135 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 139 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 149 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 153 : Using default destination of 1 (file).
-Message[305] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 169 : Using default destination of 1 (file).
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 191 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] C:\USERS\DIANGO\MPLABXPROJECTS\MATRICIALDEMO.X\MAIN.ASM 193 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 121 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 122 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 123 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 173 : Found label after column 1. (LOOP)
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 180 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 186 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 196 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 200 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 211 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 215 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 226 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 230 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 240 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 244 : Using default destination of 1 (file).
+Message[305] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 306 : Using default destination of 1 (file).
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 330 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] /home/mipc/MPLABXProjects/Gitwilson.X/main.asm 333 : Register in operand not in bank 0.  Ensure that bank bits are correct.
