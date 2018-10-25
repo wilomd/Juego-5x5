@@ -78,6 +78,7 @@ ANIMALES    EQU 0X30
 PREGUNTA    EQU 0X31
 TEMP	    EQU 0X32
 CONTPRGTA   EQU 0X33	    
+PUERTOD	    EQU	0X34	   
 	    
  
 	
@@ -142,6 +143,7 @@ INICIO
 	MOVLW .1
 	MOVWF ANIMALES
 	MOVWF PREGUNTA
+	MOVWF PUERTOD
 	MOVLW .25
 	MOVWF CONTPRGTA
 
@@ -436,13 +438,19 @@ encendolinea
 	
 ;::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	
-	;  rutinas de ?????????
+	; Automatizando la rutina
 	 
 ;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
+
+; variable que inicie en 0 hasta 4 para el bit de pregunta
+; o a partir de el call hacer el llamado	
+	
 LOOP	
 	; Fila 1 de Preguntas
 	BTFSC PORTC,0    ; mimo valor de pregunta
 	GOTO LOOP
+; hacer un llamado aqui ? y todo es la rutina ?
+	
 	CALL VALIDATE_ANSWER
 	BCF STATUS,Z
 	MOVLW .1
@@ -453,73 +461,21 @@ LOOP
 	
 	CLRF CORRECTO
 	INCF CONT_WIN    ;falta tono de bueno
-	MOVLW B'00000001'
+	CALL SIGFILA
+	MOVF PUERTOD,W
 	MOVWF PORTD
-	
-	;estas 5 preguntas son muy parecidas hacer una sola generica 
-	; que funcione igual las 5 veces del  programa
-	
-LOOP2
-	; Fila 2 de Preguntas
-	BTFSC PORTC,1
-	GOTO LOOP2
-	CALL VALIDATE_ANSWER
-	BCF STATUS,Z
-	MOVLW .1
-	SUBWF CORRECTO
-	BTFSS STATUS,Z
-	GOTO LOOP2
-	CLRF CORRECTO
-	INCF CONT_WIN
-	MOVLW B'00000011'
-	MOVWF PORTD
-	
-LOOP3
-	; Fila 3 de Preguntas
-	BTFSC PORTC,2
-	GOTO LOOP3
-	CALL VALIDATE_ANSWER
-	BCF STATUS,Z
-	MOVLW .1
-	SUBWF CORRECTO
-	BTFSS STATUS,Z
-	GOTO LOOP3
-	CLRF CORRECTO
-	INCF CONT_WIN
-	MOVLW B'00000111'
-	MOVWF PORTD
+	GOTO LOOP
 
-LOOP4
-	; Fila 4 de Preguntas
-	BTFSC PORTC,3
-	GOTO LOOP4
-	CALL VALIDATE_ANSWER
-	BCF STATUS,Z
-	MOVLW .1
-	SUBWF CORRECTO
-	BTFSS STATUS,Z
-	GOTO LOOP4
-	CLRF CORRECTO
-	INCF CONT_WIN
-	MOVLW B'00001111'
-	MOVWF PORTD	
-LOOP5
-	; Fila 5 de Preguntas
-	BTFSC PORTC,4
-	GOTO LOOP5
-	CALL VALIDATE_ANSWER
-	BCF STATUS,Z
-	MOVLW .1
-	SUBWF CORRECTO
-	BTFSS STATUS,Z
-	GOTO LOOP5
-	CLRF CORRECTO
-	INCF CONT_WIN
-	MOVLW B'00011111'
-	MOVWF PORTD
-
+	
+SIGFILA     BSF	STATUS,C
+	    RLF	PUERTOD,F   ; ROTA A LA IZQUIERDA BIT  
+	    MOVF PUERTOD,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+	    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO 
+	    BTFSS STATUS,Z
+	    RETURN 
 CLEAR
-	CLRF PORTD
-	GOTO LOOP	
+	    CLRF PORTD
+	    GOTO LOOP
 	
-	
+; la  rutina terminaria aqui ojo
+	    
