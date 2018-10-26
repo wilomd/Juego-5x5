@@ -11,11 +11,16 @@
 	
 ; 2da Columna Preguntas solo bombillos
 	
-; 25 bombillos y 25 pulsadores panel de Respuesta
-
+; 25 bombillos no manejables en este programa por los momentos
+	
+; 25 pulsadores panel de Respuesta del teclado matricial
+	
 ; 1 Pulsador de inicio del Sistema	
 
-; 1 Salida de Audio para Tono (acierto o respuesta Errada)
+; 1 Salida de Audio para los Tonos (de acierto o respuesta Errada)
+
+; comunicacion con un expansor de puertos o otro pic16f887
+	
 	    
 	List p=16f887
 	#include <p16f887.inc>
@@ -106,15 +111,21 @@ CONVERT_HEX
 	DT .16, .17,.18,.19,.20
 	DT .21, .22,.23,.24,.25
 END_CONVERT_HEX
-	 
+	
+	
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+; esta trabajando cada fila es un animal y las columnas corresponden al valor 	
+; numerico de c/u de las 5 respuestas correspondientes del animal, en el ejemplo
+; se ve las posiciones de las respuestas de la matriz principal. solo esta primer
+; animal con sus 5 posibles respuestas.	
 RESPUESTAS_1 
-	ADDWF PCL,F	; esta trabajando cada fila es una animal y las columnas
-			; es la respuestas correspondientes del animal
-	DT  .1,	 .7,  .14, .19,  .23
+	ADDWF PCL,F	
+			
+	DT  .1,	 .7,  .14, .19,  .23  ;Probar con estas respuestas solamente
 	DT  .0,	 .0,  .0,  .0,  .0
-	DT  .0,	 .0,  .0,  .14,  .0
-	DT  .0,	 .0,  .0,  .19,  .0
-	DT  .0,	 .0,  .23,  .0,  .0
+	DT  .0,	 .0,  .0,  .0,  .0
+	DT  .0,	 .0,  .0,  .0,  .0
+	DT  .0,	 .0,  .0,  .0,  .0
 END_RESPUESTAS_1
 	
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
@@ -278,6 +289,7 @@ SAVE_VALUE
 VALIDATE_ANSWER	
 	
 	MOVWF RESPUESTA		; W trae el valor de TECLA
+
 	MOVF	CONTAFIL,W
 	MOVWF	FILNUM
 	
@@ -294,7 +306,11 @@ SUM1	ADDLW  .5
 	SUBLW  .5
 	
 	ADDWF  CONTACOL,W
-	SUBLW  .1	    ; SE DESPLAZARA W VECES EN LA TABLA Y VERIFICA
+	
+	MOVWF FILNUM
+	MOVLW .1
+	SUBWF  FILNUM,W	    
+			    ; SE DESPLAZARA W VECES EN LA TABLA Y VERIFICA
 			    ; SI LA TECLA PULSADA CORRESPONDE A LA RESPUESTA
 	
 	CALL RESPUESTAS_1   ; SE DESPLAZA EN LA TABLA Y SE TRAEL EN DATO
@@ -395,7 +411,13 @@ PROXIMO
 	NOP 
 	NOP
 	
-
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+; rutinas para calcular la posicion de la respuesta x pregunta y fila 
+;con una variable, estas rutinas se activan al cambiar la pregunta o el 
+;animal.
+	
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
 CNTFIL	MOVLW  .1			; ANIMALES
 	ADDWF CONTAFIL,F
@@ -418,9 +440,45 @@ CNTCOL	MOVLW .1			;PREGUNTAS
 	RETURN
 	
 	END
-
 	
-
+; ESTE PROGRAMA NO CONTIENE:
+	;EL MANEJO DE LOS BOMBILLOS DE LA MATRIZ DE RESPUESTA
+	;TONO DE RESPUESTA BUENO O MALO
+	;ILUMINACION PARA LLAMAR LA ATENCION DEL PUBLICO
+	;USO DE INTERRUPCIONES ni pull up
+	;USO DEL PERRO GUARDIAN PARA REINICIAR EL PROGRAMA EN CASO DE FALLA
+	;no esta usando bajo consumo con Sleep.
+	
+	
+	
+	;todo lo que esta en las proximas lineas se elimino 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&	
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+;&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	BCF STATUS,Z
 	MOVLW .1
 	SUBWF CORRECTO
@@ -468,12 +526,6 @@ CLEAR	CLRF PORTD
 	MOVLW .4
 	SUBWF temp,W
 	
-; ESTE PROGRAMA NO CONTIENE:
-	;EL MANEJO DE LOS BOMBILLOS DE LA MATRIZ DE RESPUESTA
-	;TONO DE RESPUESTA BUENO O MALO
-	;ILUMINACION PARA LLAMAR LA ATENCION DEL PUBLICO
-	;USO DE INTERRUPCIONES
-	;USO DEL PERRO GUARDIAN PARA REINICIAR EL PROGRAMA EN CASO DE FALLA
 	
 	
 	
