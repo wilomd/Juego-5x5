@@ -1,11 +1,11 @@
 ; FORMATO DEL PANEL
-	
-;	A   a	     1,  2,  3,  4,  5	
-;	B   b	     6,  7,  8,  9, 10
-;	C   c	    11, 12, 13, 14, 15
-;	D   d	    16, 17, 18, 19, 20
-;	E   e	    21, 22, 23, 24, 25
-	
+;		     0	 1   2   3   4 bits puertoB
+;0	A   a	     1,  2,  3,  4,  5	
+;1	B   b	     6,  7,  8,  9, 10
+;2	C   c	    11, 12, 13, 14, 15
+;3	D   d	    16, 17, 18, 19, 20
+;4	E   e	    21, 22, 23, 24, 25
+;puerto c	
 	
 ; 1ra columna Animales solo bombillos 
 	
@@ -214,7 +214,8 @@ Teclado_SigueEsperando
 	RETURN
 ;===============================================================================
 ; LEE SI SE PULSO UNA TECLAS EN SELECION DE LA RESPUESTA, Y VERIFICA CUAL DE LAS 
-; 25 TECLAS FUE PULSADA PARA COMPARAR CON SU RESPUESTA PUERTO B PULL UP
+;25 TECLAS FUE PULSADA PARA COMPARAR CON SU RESPUESTA, CON EL PUERTO B EN PULL UP
+;AL PRESIONAR EL PULSADOR SE DEBE LEER UNA CERO LOGICO
 ;===============================================================================
 
 Teclado_LeeOrdenTecla
@@ -294,22 +295,17 @@ VALIDATE_ANSWER
 	MOVWF	FILNUM
 	
 	
-	MOVLW  .0
-	MOVWF  NVECES
-	
-	MOVF  NVECES,W
-SUM1	ADDLW  .5 
-	DECFSZ FILNUM,F
-	
-	GOTO   SUM1
-	
-	SUBLW  .5
-	
-	ADDWF  CONTACOL,W
-	
-	MOVWF FILNUM
-	MOVLW .1
-	SUBWF  FILNUM,W	    
+	MOVLW	.0
+	MOVWF	NVECES
+	MOVF	NVECES,W
+SUM1	ADDLW	.5 
+	DECFSZ	FILNUM,F
+	GOTO	SUM1
+	SUBLW	.5
+	ADDWF	CONTACOL,W
+	MOVWF	FILNUM
+	MOVLW	.1
+	SUBWF	FILNUM,W	    
 			    ; SE DESPLAZARA W VECES EN LA TABLA Y VERIFICA
 			    ; SI LA TECLA PULSADA CORRESPONDE A LA RESPUESTA
 	
@@ -350,9 +346,11 @@ INICIO
 	CLRF TRISC	    ;PUERTO C SALIDA PARA EL TECLADO
 	CLRF TRISA	    ;PUERTO A SALIDA BOMBILLOS ANIMAL
 	CLRF TRISD	    ;PUERTO D SALIDA BOMBILLOS PREGUNTA
-
+	;MOVLW 0XFF	    ; 
+	;MOVWF WPUB	    ;BITS DEL PUERTO B CON  PULL UP
+	
+	
 	BANK0
-
 	MOVLW .1
 	MOVWF ANIMALES
 	MOVWF PREGUNTA
