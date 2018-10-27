@@ -675,6 +675,98 @@ CLEAR
 TONOERROR
 	; GENERA TONO DE ERROR
 	; VUELVE A ESPERAR PULZAR TECLAS CORRECTA
-	NOP
+;==============================================================================
+;Se generan 3 tonos 
+;Con 4MHz de frequencia la frecuencia mínima de PWM es de 244 Hz, que se ubica 
+;entre las notas musicales de la octava 4 (ni an graves ni tan agudas)
+;PWM en modo Simple Output solo es posible en el pin P1A (RC2)
+;==============================================================================
+INIT_FRQ
+	BANK1
+	MOVLW .212 
+	MOVWF PR2	    ;CARGA LA FRECUENCIA INICIAL DEL PWM (212 HZ) NOTA RE(4)
+	
+	CALL CONFIG_PWM	    ;PARAMETROS PARA EL MODO PWM
+	
+	CALL INIT_PWM	    ;INICIA EL PWM
+
+	MOVLW .255	    
+	CALL RETARDO_NOTAS_20MS
+	
+	MOVLW .224	    
+	CALL LOAD_FREQ	    ;NOTA DO#(4)
+	
+	MOVLW .255
+	CALL RETARDO_NOTAS_20MS   
+	
+	MOVLW .238	    
+	CALL LOAD_FREQ	    ;NOTA DO(4)
+	
+	MOVLW .255
+	CALL RETARDO_NOTAS_20MS
+	MOVLW .255
+	CALL RETARDO_NOTAS_20MS
+	
+	CALL DISABLE_PWM
+	
+	RETFIE		    ;(?)
+	
+;==============================================================================
+;			CONFIGURA EL MODO PWM
+;==============================================================================
+CONFIG_PWM
+	BANK1
+	BSF TRISC,2	    ;PONE EL PIN P1A COMO ENTRADA PARA MANTENER NACTIVO EL PWM
+	BANK0
+	MOVLW B'00111100'   
+	MOVWF CCP1CON	    ;MODO PWM CON P1A,P1B,P1C,P1D ACTIVOS EN ALTO
+	
+	MOVLW B'00111111'
+	MOVWF CCPR1L	    ;DUTY CYCLE AL 25%(?)
+	
+	BCF PIR1,TMR2IF	    ;SE LIMPIA BANDERA DEL TIMER2
+	
+	MOVLW B'00000011'
+	MOVWF T2CON	    ;PREESCALADOR A 16
+
+	RETURN
+
+;==============================================================================
+;			INICIA EL PWM
+;==============================================================================
+INIT_PWM
+	BANK1
+	BCF TRISC,2	    ;PIN PIA COMO SALIDA PARA EL PWM
+	BSF T2CON,TMR2ON    ;SE INICIA EL TIMER
+
+	RETURN
+	
+;==============================================================================
+;			DESACTIVA EL PWM
+;==============================================================================
+DISABLE_PWM
+	BANK1
+	BSF TRISC,2
+	
 	RETFIE
+
+;==============================================================================
+;		CARGA UN VALOR EN PR2 PARA EL CAMBIO DE FREQ
+;==============================================================================
+LOAD_FREQ
+	BANK1
+	MOVWF PR2
+	RETURN
+
+RETARDO_NOTAS_20MS
+	BANK0
+	MOVWF CONTA_2
+	MOVLW .250
+	MOVWF CONTA_1
+	NOP
+	DECFSZ CONTA_1,F
+	GOTO $-.2
+	DECFSZ CONTA_2,F
+	GOTO $-.6
+	RETURN 
 LOOP	
