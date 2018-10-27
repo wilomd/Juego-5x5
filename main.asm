@@ -109,8 +109,7 @@ CONVERT_HEX
 	DT .16, .17,.18,.19,.20
 	DT .21, .22,.23,.24,.25
 END_CONVERT_HEX
-	
-	
+		
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ; esta trabajando cada fila es un animal y las columnas corresponden al valor 	
 ; numerico de c/u de las 5 respuestas correspondientes del animal, en el ejemplo
@@ -119,7 +118,7 @@ END_CONVERT_HEX
 RESPUESTAS_1 
 	ADDWF PCL,F	
 			
-	DT  .1,	 .7,  .14, .19,  .23  ;Probar con estas respuestas solamente
+	DT  .1,	 .7,  .11, .19,  .23  ;Probar con estas respuestas solamente
 	DT  .0,	 .0,  .0,  .0,  .0
 	DT  .0,	 .0,  .0,  .0,  .0
 	DT  .0,	 .0,  .0,  .0,  .0
@@ -149,9 +148,8 @@ RETARDO_20MS
 	DECFSZ CONTA_2,F
 	GOTO $-.6
 	RETURN 
-
 ;===============================================================================
-;		RUTINA DE ENCENDER LUCES DE PREGUNTAS Y ANIMALES
+;		RUTINA DE ENCENDER LA SECUENCIA DE LUCES DE PREGUNTAS Y ANIMALES
 		;USANDO 5 BITS PUERTO A y D 
 ;===============================================================================
 ;ANIMALES    EQU 0X30
@@ -186,7 +184,6 @@ ENCENDER
 	    MOVF ANIMALES,W 
 	    MOVWF PORTA
 	    RETURN
-
 ;==============================================================================
 ;			LEER EL VALOR EN TECLADO 5x5
 ; asigna un valor a la tecla pulsada entre 1 y 25 con la tabla CONVERT_HEX
@@ -222,7 +219,6 @@ Teclado_SigueEsperando
 ;25 TECLAS FUE PULSADA PARA COMPARAR CON SU RESPUESTA, CON EL PUERTO B EN PULL UP
 ;AL PRESIONAR EL PULSADOR SE DEBE LEER UNA CERO LOGICO
 ;===============================================================================
-
 Teclado_LeeOrdenTecla
 	BANK0
 	MOVLW .1
@@ -232,6 +228,7 @@ Teclado_LeeOrdenTecla
 			    ; por el pull up se activa con cero logico
 CHECK_ROW
 	MOVWF PORTC	    ;ENVIA EL VALOR DE W POR EL PUERTO
+	MOVF PORTB,W  ;?
 
 CHECK_COL_1
 	BTFSS PORTB,0
@@ -264,8 +261,11 @@ END_COL
 	BTFSC STATUS,C		; SI X < 25 NO SE PULSO LA ULTIMA TECLA
 	GOTO TECLA_NO_PULSE
 	BSF STATUS,C
+;	BCF STATUS,C		;PARA TRABAJAR EN 1 LOGICO
 	RLF PORTC,W	        ;INCREMENTA PARA LA SIGUENTE FILA
 	GOTO CHECK_ROW
+	
+
 	
 	
 TECLA_NO_PULSE
@@ -275,8 +275,7 @@ TECLA_NO_PULSE
 	GOTO CHECK_ROW
 
 SAVE_VALUE
-	MOVF TECLA,W           ; Variable TECLA contiene el valor pulsado
-	
+	MOVF TECLA,W           ; Variable TECLA contiene el valor pulsado	
 ;==============================================================================
 ; VALIDA SI LA RESPUESTA ES CORRECTA, CONVIERTE EL VALOR DE LA TECLA PULSADA
 ; EN UN VALOR EN HEX, PARA COMPARAR CON 
@@ -329,16 +328,15 @@ SUM1	ADDLW	.5
 INICIO
 	
 	DigPort			;inicializa los puertos en digital  
-
 	BANK1
-	MOVLW 0FFH	      
+	MOVLW 01FH	      
 	MOVWF TRISE	    ;PUERTO E ENTRADA para Pulsador de Inicio Programa
 	MOVWF TRISB	    ;PUERTO B ENTRADA PARA EL TECLADO
 	CLRF TRISC	    ;PUERTO C SALIDA PARA EL TECLADO
 	CLRF TRISA	    ;PUERTO A SALIDA BOMBILLOS ANIMAL
 	CLRF TRISD	    ;PUERTO D SALIDA BOMBILLOS PREGUNTA
 	MOVLW 0XFF	    ; 
-	MOVWF WPUB	    ;BITS DEL PUERTO B CON  PULL UP
+	MOVWF WPUB	    ;HABILITANDO EL PUERTO B CON  PULL UP
 	
 	
 	BANK0
@@ -370,8 +368,8 @@ INICIA
 	;CALL GUSANOPANT  ;INICIALIZA SECUENCIA PARA LLAMAR LA ATENCION DEL JUEGO
 	
 	CALL RETARDO_20MS   ;USAR INT RB CAMBIO ESTADO PARA QUE SALTE AL INICIO?
-	BTFSS PORTE,0	    ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
-	GOTO INICIA
+;	BTFSS PORTE,0	    ; BOTON DE INICIO SISTEMA  PREGUNTA SI ESTA EN CERO
+;	GOTO INICIA
 	
 ; cambiar esto con uno de los botones de Puerto B para trabajar con la int
 ; de cambio de estado y dejar el PIC en Sleep 	
@@ -398,7 +396,7 @@ PROXIMO
 			;EN CASO DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
 	GOTO SISTPREG
 	NOP
-	GOTO FIN
+;	GOTO FIN
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 ; rutinas para calcular la posicion de la respuesta x pregunta y fila 
@@ -427,7 +425,7 @@ CNTCOL	MOVLW .1			;PREGUNTAS
 	MOVWF CONTACOL
 	RETURN
 	
-FIN	END
+	END
 	
 ; ESTE PROGRAMA NO CONTIENE:
 	;EL MANEJO DE LOS BOMBILLOS DE LA MATRIZ DE RESPUESTA
