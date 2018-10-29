@@ -91,7 +91,8 @@ CONTACOL    EQU	0X36
 ACTVTKLA    EQU	0X37
 NVECES	    EQU 0X38
 FILNUM	    EQU 0X39	    
- 
+ACTVSW	    EQU 0X40
+	    
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
@@ -102,16 +103,6 @@ FILNUM	    EQU 0X39
 	
 	ORG 04H
 	;HACER INT de reinicio o WD funcione....
-	
-
-CONVERT_HEX
-	ADDWF PCL,F
-	DT  .1,  .2, .3, .4, .5
-	DT  .6,  .7, .8, .9,.10
-	DT .11, .12,.13,.14,.15
-	DT .16, .17,.18,.19,.20
-	DT .21, .22,.23,.24,.25
-END_CONVERT_HEX
 		
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ; esta trabajando cada fila es un animal y las columnas corresponden al valor 	
@@ -120,10 +111,27 @@ END_CONVERT_HEX
 ; animal con sus 5 posibles respuestas.	
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+ROTACIONPTOC
+	ADDWF PCL,F
+	DT 0X00, B'11111010', B'11111001',B'11110011',B'11101011',B'11011011'   
+	
+	
+END_ROTACIONPTOC	
+	
+	
+CONVERT_HEX
+	ADDWF PCL,F
+	DT  .1,  .2, .3, .4, .5
+	DT  .6,  .7, .8, .9,.10
+	DT .11, .12,.13,.14,.15
+	DT .16, .17,.18,.19,.20
+	DT .21, .22,.23,.24,.25
+END_CONVERT_HEX
+	
 RESPUESTAS_1 
 	ADDWF PCL,F	
 ; ANIMAL1			
-	DT  .1,	 .7,  .11, .19,  .23  ;Probar con estas respuestas solamente
+	DT  .1,	 .7,  .13, .19,  .25  ;Probar con estas respuestas solamente
 
 	DT  .0,	 .0,  .0,  .0,  .0
 	DT  .0,	 .0,  .0,  .0,  .0
@@ -223,7 +231,6 @@ ENCENDER
 READ_HEX
 	BTFSS STATUS,C
 	GOTO READ_HEX_END
-
 	CALL CONVERT_HEX
 	BSF STATUS,C
 READ_HEX_END
@@ -281,16 +288,18 @@ Teclado_SigueEsperando
 ;AL PRESIONAR EL PULSADOR SE DEBE LEER UNA CERO LOGICO
 ;===============================================================================
 ;TECLA	    EQU 0x23
-Teclado_LeeOrdenTecla
+Teclado_LeeOrdenTecla      
 	BANK0
 	MOVLW .1
 	MOVWF TECLA
+	MOVWF ACTVSW
 	MOVF ACTVTKLA,W	    ; PRIMERA COLUMNA CON CERO PARA MATRIZ DEL TECLADO
-			    ; B'11111110' VALOR ENVIADO POR LA FILA
+			    ; B'11111010' 0FAH VALOR ENVIADO POR LA FILA
 			    ; por el pull up se activa con cero logico
 CHECK_ROW
 			    
 	MOVWF PORTC	    ;ENVIA EL VALOR DE W POR EL PUERTO
+	
 
 CHECK_COL_1
 	BTFSS PORTB,0
@@ -318,24 +327,19 @@ CHECK_COL_5
 	INCF TECLA,F	
 
 END_COL
-	MOVF  LAST_TECLA,W	; VALOR DE LA VARIABLE ES 25
-	SUBWF TECLA,W		; RESTA 25 MENOS LA TECLA PULSADA
-	BTFSC STATUS,C		; SI X < 25 NO SE PULSO LA ULTIMA TECLA
-	GOTO TECLA_NO_PULSE
-	BSF STATUS,C
-	RLF PORTC,W	    ;INCREMENTA PARA LA SIGUENTE FILA
-	
-	MOVF ACTVTKLA,W	    ;Limpia el bit 2 utilizado para PWM en el Tono
-	BCF ACTVTKLA,2
-	MOVF ACTVTKLA,W
-
+	MOVF	LAST_TECLA,W	; VALOR DE LA VARIABLE ES 25
+	SUBWF	TECLA,W		; RESTA 26 MENOS LA TECLA PULSADA
+	BTFSC	STATUS,C		; SI X < 25 NO SE PULSO LA ULTIMA TECLA
+	GOTO	TECLA_NO_PULSE
+	INCF	ACTVSW	
+	MOVF	ACTVSW,W
+	CALL	ROTACIONPTOC 
 	GOTO CHECK_ROW
+	
+	
 	
 TECLA_NO_PULSE
-	MOVLW B'11111010'
-	MOVF ACTVTKLA,W
-	CLRF TECLA
-	GOTO CHECK_ROW
+	GOTO Teclado_LeeOrdenTecla
 
 SAVE_VALUE
 	MOVF TECLA,W           ; Variable TECLA contiene el valor pulsado	
@@ -569,3 +573,9 @@ RETARDO_NOTAS_20MS
 
 
 	END	
+
+	
+	
+
+
+	
