@@ -69,7 +69,6 @@ DigPort MACRO
 	CLRF ANSELH
 	ENDM
 	
-	
 CONTA_2	    EQU 0x20
 CONTA_1	    EQU 0x21
 BIT	    EQU 0x22
@@ -92,6 +91,7 @@ ACTVTKLA    EQU	0X37
 NVECES	    EQU 0X38
 FILNUM	    EQU 0X39	    
 ACTVSW	    EQU 0X40
+CONTA_3	    EQU 0X41
 	    
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
@@ -114,11 +114,8 @@ ACTVSW	    EQU 0X40
 ROTACIONPTOC
 	ADDWF PCL,F
 	DT 0X00, B'11111010', B'11111001',B'11110011',B'11101011',B'11011011'   
-	
-	
 END_ROTACIONPTOC	
-	
-	
+		
 CONVERT_HEX
 	ADDWF PCL,F
 	DT  .1,  .2, .3, .4, .5
@@ -132,10 +129,13 @@ RESPUESTAS_1
 	ADDWF PCL,F	
 ; ANIMAL1			
 	DT  .1,	 .7,  .13, .19,  .25  ;Probar con estas respuestas solamente
-
+; ANIMAL2
+	DT  .4,	 .8,  .11,  .20,  .21
+; ANIMAL3	
 	DT  .0,	 .0,  .0,  .0,  .0
+; ANIMAL4	
 	DT  .0,	 .0,  .0,  .0,  .0
-	DT  .0,	 .0,  .0,  .0,  .0
+; ANIMAL5	
 	DT  .0,	 .0,  .0,  .0,  .0
 END_RESPUESTAS_1
 	
@@ -197,33 +197,34 @@ SUM1	ADDLW	.5	    ; SUMA 5 POR CADA FILA DE DESPLAZAMIENTO EN MATRIZ
 ;CONTAFIL    EQU 0X35
 ;CONTACOL    EQU 0X36		
 			    
-VERIFICA1   CALL CNTCOL	    ;llamado al contador de columnas para off set
-	    BCF	STATUS,C
-	    RLF	PREGUNTA,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
-	    MOVF PREGUNTA,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
-	    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
-	    BTFSS STATUS,Z
-	    GOTO ENCENDER
+VERIFICA1   
+	CALL CNTCOL	    ;llamado al contador de columnas para off set
+	BCF	STATUS,C
+	RLF	PREGUNTA,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+	MOVF PREGUNTA,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+	SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+	BTFSS STATUS,Z
+	GOTO ENCENDER
 
-	    MOVLW .1          ;inicializa las preguntas para proximo animal
-	    MOVWF PREGUNTA
+	MOVLW .1          ;inicializa las preguntas para proximo animal
+	MOVWF PREGUNTA
 		    
 VERIFICA	
-	    CALL CNTFIL
-	    BCF	STATUS,C
-	    RLF	ANIMALES,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
-	    MOVF ANIMALES,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
-	    SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
-	    BTFSS STATUS,Z
-	    GOTO ENCENDER
+	CALL CNTFIL
+	BCF	STATUS,C
+	RLF	ANIMALES,F   ; ROTA A LA IZQUIERDA BIT PRENDER BOMBILLO 
+	MOVF ANIMALES,W ; INICIA PREGUNTA PARA SABER SI LLEGO AL FIN
+	SUBLW 20H	    ; SI EL BIT 5 ESTA ACTIVO REINICIA PROGRAMA
+	BTFSS STATUS,Z
+	GOTO ENCENDER
 	    ;CALL INICIA     ; DEBERIA SER EL PROGRAMA A RESET 		    
 
 ENCENDER	
-	    MOVF PREGUNTA,W
-	    MOVWF PORTD
-	    MOVF ANIMALES,W 
-	    MOVWF PORTA
-	    RETURN
+	MOVF PREGUNTA,W
+	MOVWF PORTD
+	MOVF ANIMALES,W 
+	MOVWF PORTA
+	RETURN
 ;==============================================================================
 ;			LEER EL VALOR EN TECLADO 5x5
 ; asigna un valor a la tecla pulsada entre 1 y 25 con la tabla CONVERT_HEX
@@ -263,10 +264,9 @@ CNTCOL	MOVLW .1			;PREGUNTAS
 	MOVWF CONTACOL
 	RETURN
 	
-	
 ;===============================================================================
 ;                      ANTIREBOTE PARA LOS PULSADORES
-;===============================================================================
+    ;===============================================================================
 Teclado_EsperaDejePulsar
 ;	BANK0
 ;	MOVLW 0x1F
@@ -299,7 +299,6 @@ Teclado_LeeOrdenTecla
 CHECK_ROW
 			    
 	MOVWF PORTC	    ;ENVIA EL VALOR DE W POR EL PUERTO
-	
 
 CHECK_COL_1
 	BTFSS PORTB,0
@@ -329,14 +328,12 @@ CHECK_COL_5
 END_COL
 	MOVF	LAST_TECLA,W	; VALOR DE LA VARIABLE ES 25
 	SUBWF	TECLA,W		; RESTA 26 MENOS LA TECLA PULSADA
-	BTFSC	STATUS,C		; SI X < 25 NO SE PULSO LA ULTIMA TECLA
+	BTFSC	STATUS,C	; SI X < 25 NO SE PULSO LA ULTIMA TECLA
 	GOTO	TECLA_NO_PULSE
 	INCF	ACTVSW	
 	MOVF	ACTVSW,W
 	CALL	ROTACIONPTOC 
 	GOTO CHECK_ROW
-	
-	
 	
 TECLA_NO_PULSE
 	GOTO Teclado_LeeOrdenTecla
@@ -354,18 +351,35 @@ SAVE_VALUE
 ;CONTACOL    EQU	0X36
 ;NVECES	     EQU        0X38	
 ;RESPUESTA   EQU	0x25	
+	
+	
 VALIDATE_ANSWER	
 
 	CALL OFFSETR	
-	CALL RESPUESTAS_1   ; SE DESPLAZA EN LA TABLA Y SE TRAEL EN DATO
-	SUBWF RESPUESTA
-	BTFSS STATUS,Z
+	CALL RESPUESTAS_1   ; SE DESPLAZA EN LA TABLA Y SE TRAE EL EN DATO
+	SUBWF RESPUESTA	    ;
+	
+	BTFSC STATUS,Z
+	goto tklbuena
 	GOTO tklmala
 			    ;RETORNA SI LA RESPUESTA ES ERRADA y espera la 
 			    ;correcta x tiempo
-	MOVLW .1
+tklbuena
+	CLRF  PORTB	 
+	MOVLW .1	    
 	MOVWF CORRECTO
+	nop
+	nop
+	nop
+	nop
 ;	CALL TONO_ACIERTO
+	BANK0		    ; SE AGREGA UN RETARDO PARA QUE SUELTE LA TECLA PULSADA
+	MOVLW .80
+	MOVWF CONTA_3
+	CALL RETARDO_20MS
+	NOP
+	DECFSZ CONTA_3,F
+	GOTO $-.3
 	RETURN
 
 tklmala
@@ -389,7 +403,7 @@ INICIO
 	CLRF TRISA	    ;PUERTO A SALIDA BOMBILLOS ANIMAL
 	CLRF TRISD	    ;PUERTO D SALIDA BOMBILLOS PREGUNTA
 	
-	ClSPort	    ; MACRO DE INICIALIZAR PUERTOS
+	ClSPort		    ; MACRO DE INICIALIZAR PUERTOS
 	MOVLW 0XFF	    ; 
 	BANK1
 	MOVWF WPUB	    ;HABILITANDO EL PUERTO B CON  PULL UP
@@ -433,6 +447,8 @@ INICIA
 	
 ;			    ANIMALES Y PREGUNTAS	
 
+; Inicia el ciclo de preguntas de cada uno de los animales	
+
 ;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
 	
 	BSF PORTA,0       ;PRIMER ANIMAL
@@ -444,32 +460,22 @@ SISTPREG	    ;sistema de preguntas y respuestas
 					;REPITE HASTA QUE SE PULSE LA TECLA 
 					;CORRECTA PARA AVANZAR A LA SIGUIENTE
 					;PREGUNTA
-	
 PROXIMO
+	CLRF PORTB				
 	CALL VERIFICA1	;SIGUIENTE PREGUNTA Y/O ANIMAL
 			;PREGUNTA SI ES EL FINAL DEL CONTADOR DE LAS PREGUNTAS 
 			;EN CASO DE NO SER REPITE BUCLE PARA LA PROXIMA PREGUNTA
 	GOTO SISTPREG
-	NOP
-;	GOTO FIN
 
 ; ESTE PROGRAMA NO CONTIENE:
 	;EL MANEJO DE LOS BOMBILLOS DE LA MATRIZ DE RESPUESTA
 	;TONO DE RESPUESTA BUENO O MALO
-	;ILUMINACION PARA LLAMAR LA ATENCION DEL PUBLICO
+	;ILUMINACION PARA LLAMAR LA ATENCION DEL PUBLICO (gusano)
 	;USO DE INTERRUPCIONES 
 	;USO DEL PERRO GUARDIAN PARA REINICIAR EL PROGRAMA EN CASO DE FALLA
 	;no esta usando bajo consumo con Sleep.
 	
-	
-	
-	;todo lo que esta en las proximas lineas se elimino 
-	
-	
-	
-
-
-
+;==============================================================================
 TONOERROR
 	; GENERA TONO DE ERROR
 	; VUELVE A ESPERAR PULZAR TECLAS CORRECTA
@@ -478,9 +484,6 @@ TONOERROR
 ;Con 4MHz de frequencia la frecuencia mínima de PWM es de 244 Hz, que se ubica 
 ;entre las notas musicales de la octava 4 (ni an graves ni tan agudas)
 ;PWM en modo Simple Output solo es posible en el pin P1A (RC2)
-	
-	
-	
 ;==============================================================================
 INIT_FRQ
 	BANK1
@@ -510,7 +513,6 @@ INIT_FRQ
 	CALL DISABLE_PWM
 	
 	RETURN
-	;RETFIE		    ;(?)  es un retorno de interrupcion
 	
 ;==============================================================================
 ;			CONFIGURA EL MODO PWM
@@ -547,9 +549,7 @@ INIT_PWM
 DISABLE_PWM
 	BANK1
 	BSF TRISC,2
-	
 	RETURN 
-	;RETFIE
 
 ;==============================================================================
 ;		CARGA UN VALOR EN PR2 PARA EL CAMBIO DE FREQ
@@ -571,11 +571,4 @@ RETARDO_NOTAS_20MS
 	GOTO $-.6
 	RETURN 
 
-
-	END	
-
-	
-	
-
-
-	
+	END
