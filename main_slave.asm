@@ -56,7 +56,11 @@ ROTABOM	    EQU  0X20
 DATO	    EQU	 0X21	    
 DATO1	    EQU  0X22
 DATO2	    EQU  0X23
-DATO4	    EQU  0X24	    
+DATO4	    EQU  0X24
+
+CONTA_1	    EQU 0x71
+CONTA_2	    EQU 0x72
+CONTA_3	    EQU 0x73	 
  
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
@@ -149,15 +153,15 @@ END_GusanoVertcl
 
 SALIDAPTO
 	ADDWF PCL,F
-	DT .01, .02, .04, .08, .10
+	DT .01, .02, .04, .08, 10H,
 	
-	DT .20, .40, .80, .01, .02
+	DT 20H, 40H, 80H, .01, .02,
 	
-	DT .04, .08, .10, .20, .40
+	DT .04, .08, 0X10, 0X20, 0X40,
 	
-	DT .80, .01, .02, .04, .08
+	DT 0X80, .01, .02, .04, .08,
 	
-	DT .10, .20, .40, .80, .01
+	DT 0X10, 0X20, 0X40, 0X80, .01,
 END_SALIDAPTO
 
 	
@@ -172,8 +176,8 @@ INICIO
 	CLRF TRISD
 	CLRF TRISB
 	CLRF TRISA
-	MOVLW B'0001'
-	MOVWF TRISD
+	MOVLW B'0000'
+	MOVWF TRISE
 	
 	MOVLW B'00011000'
 	MOVWF TRISC
@@ -189,7 +193,7 @@ INICIO
 	MOVLW B'11000000'   ;DIRECCIÓN DEL EESCLAVO I2C
 	CALL I2C_INIT_SLAVE
 	
-	GOTO GUSANO1
+	GOTO GUSANO6
 LOOP
 	SLEEP
 	GOTO LOOP
@@ -223,8 +227,9 @@ PROGRAMA
 
 	MOVF  DATO,W
 	CALL SALIDAPTO 
+	ClSPort
 	MOVWF PORTA
-	;CALL RETARDO_3SEGUNDOS
+	CALL cuatoSeg
 	RETURN
 	
 OTROPTO	
@@ -232,9 +237,12 @@ OTROPTO
 	SUBLW .15	; SI es menor se ejecuta puerto B
 	BTFSS STATUS,C  ; C = 1 W ? k
 	GOTO OTROPTO1
+	
+	MOVF  DATO,W
 	CALL SALIDAPTO 
+	ClSPort
 	MOVWF PORTB
-	;CALL RETARDO_3SEGUNDOS
+	CALL cuatoSeg
 	RETURN
 
 OTROPTO1
@@ -242,73 +250,79 @@ OTROPTO1
 	SUBLW .23	; SI es menor se ejecuta puerto D
 	BTFSS STATUS,C  ; C = 1 W ? k
 	GOTO OTROPTO2
+	
+	ClSPort
+	MOVF  DATO,W
 	CALL SALIDAPTO 
 	MOVWF PORTD
-	;CALL RETARDO_3SEGUNDOS
+	CALL cuatoSeg
 	RETURN
 
 OTROPTO2
 	MOVF  DATO,W    ; SI es 24 se ejecuta puerto E
-	CALL SALIDAPTO 
+	CALL SALIDAPTO
+	ClSPort
 	MOVWF PORTE
-	;CALL RETARDO_3SEGUNDOS
+	CALL cuatoSeg
 	RETURN
 
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 GUSANO1
-	CLRF DATO1
-OTRO	MOVF  DATO,W
+	;CLRF DATO4
+	MOVLW .00
+	MOVWF  DATO4
+OTRO	MOVF  DATO4,W
 	CALL GusanoHrztl
 	CALL PROGRAMA
-	INCF DATO
+	INCF DATO4,F
 	GOTO OTRO
 	
 GUSANO2 	
 	MOVLW .24 
-	MOVWF DATO
-OTRO1	MOVF  DATO,W
+	MOVWF DATO4
+OTRO1	MOVF  DATO4,W
 	CALL GusanoHrztl
 	CALL PROGRAMA
-	DECF DATO
+	DECF DATO4,F
 	GOTO OTRO1
 	
 GUSANO3
-	CLRF DATO1
-OTRO2	MOVF  DATO,W
+	CLRF DATO4
+OTRO2	MOVF  DATO4,W
 	CALL GusanoDiagnl
 	CALL PROGRAMA
-	INCF DATO
+	INCF DATO4,F
 	GOTO OTRO2
 	
 GUSANO4 	
 	MOVLW .24 
-	MOVWF DATO
-OTRO3	MOVF  DATO,W
+	MOVWF DATO4
+OTRO3	MOVF  DATO4,W
 	CALL GusanoDiagnl
 	CALL PROGRAMA
-	DECF DATO
+	DECF DATO4,F
 	GOTO OTRO3	
 GUSANO5
-	CLRF DATO1
-OTRO4	MOVF  DATO,W
+	CLRF DATO4
+OTRO4	MOVF  DATO4,W
 	CALL GusanoVertcl
 	CALL PROGRAMA
-	INCF DATO
+	INCF DATO4,F
 	GOTO OTRO4
 	
 GUSANO6 	
 	MOVLW .24 
-	MOVWF DATO
-OTRO5	MOVF  DATO,W
+	MOVWF DATO4
+OTRO5	MOVF  DATO4,W
 	CALL GusanoVertcl
 	CALL PROGRAMA
-	DECF DATO
+	DECF DATO4,F
 	GOTO OTRO5
 	
 	RETURN
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 ON_GANADOR	
-
+	;MOVLW .16
 	
 	
 	; DEBE TRAER EN W EL DATO A ENCENDER EN LA MATRIZ 5X5
@@ -317,7 +331,30 @@ ON_GANADOR
 	RETURN
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 	
+RETARDO_20MS
+	BANK0
+	MOVLW .20
+	MOVWF CONTA_2
+	MOVLW .250
+	MOVWF CONTA_1
+	NOP
+	DECFSZ CONTA_1,F
+	GOTO $-.2
+	DECFSZ CONTA_2,F
+	GOTO $-.6
+	RETURN 
 	
+;##############################################################################	
+cuatoSeg
+	
+	BANK0
+	MOVLW .100
+	MOVWF CONTA_3
+	CALL RETARDO_20MS
+	NOP
+	DECFSZ CONTA_3,F
+	GOTO $-.3	
+	return
 	
 	#include "I2C.INC"
 	END
